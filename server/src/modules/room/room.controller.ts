@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { RoomService } from './room.service';
-import { Room } from './schema/room.schema';
+import { Room } from './room.schema';
 
 @Controller('room')
 export class RoomController {

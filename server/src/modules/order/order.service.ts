@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Order } from './schema/order.schema';
+import { Order } from './order.schema';
 import { Model } from 'mongoose';
 import { OrderGateway } from './order.gateway';
 

@@ -6,13 +6,13 @@ export class Room {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   description: string;
 
-  @Prop({ required: false })
+  @Prop({ required: true })
   restaurant_id: string;
 
-  @Prop({ required: false })
+  @Prop({ required: true })
   delivery_id: string;
 
   @Prop({ required: true })
