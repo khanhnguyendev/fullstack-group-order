@@ -1,8 +1,9 @@
 "use client";
-import useCreateOrder from "@/hooks/useCreateOrder";
+
+import useCreateRoom from "@/hooks/room/useCreateRoom";
 
 const Create = () => {
-  const { handleSubmit, onChange, data } = useCreateOrder();
+  const { handleSubmit, onChange, data } = useCreateRoom();
 
   return (
     <form
@@ -11,34 +12,34 @@ const Create = () => {
     >
       <input
         type="text"
-        name="customer"
+        name="name"
         onChange={onChange}
-        value={data.customer}
+        value={data.name}
         className="bg-slate-300 p-2 outline-none"
         autoComplete="off"
-        placeholder="customer"
+        placeholder="Name"
       />
       <input
         type="text"
-        name="address"
+        name="url"
         onChange={onChange}
-        value={data.address}
+        value={data.url}
         autoComplete="off"
         className="bg-slate-300 p-2 outline-none"
-        placeholder="address"
+        placeholder="url"
       />
       <input
-        type="number"
-        name="price"
+        type="text"
+        name="description"
         onChange={onChange}
-        value={data.price}
+        value={data.description}
         autoComplete="off"
         className="bg-slate-300 p-2 outline-none"
-        placeholder="price"
+        placeholder="description"
       />
 
       <button type="submit" className="py-2  rounded bg-slate-100">
-        submit
+        create
       </button>
     </form>
   );

@@ -4,9 +4,8 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Realtime-api",
-  description:
-    "Tutorial on how to create a realtime api using nestjs,nextjs and socket.io ",
+  title: "Group Order App",
+  description: "Group Order App",
 };
 
 export default function RootLayout({
