@@ -13,7 +13,6 @@ interface Room {
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
 const GET_ROOMS_URL = `${API_URL}/room`;
 
 const useRoom = () => {

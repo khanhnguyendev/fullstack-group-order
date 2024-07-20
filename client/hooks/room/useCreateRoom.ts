@@ -3,10 +3,12 @@ import { ChangeEvent, FormEvent, useState } from "react";
 const Initial_data = {
   name: "",
   description: "",
-  restaurant_id: "",
-  delivery_id: "",
   url: "",
 };
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const CREATE_ROOM_URL = `${API_URL}/room`;
+
 const useCreateRoom = () => {
   const [data, setData] = useState(Initial_data);
 
@@ -17,10 +19,12 @@ const useCreateRoom = () => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (!data.name || !data.url) return;
+    if (!data.name || !data.url) {
+      alert("Please fill in all fields");
+    }
 
     try {
-      await fetch("http://localhost:3001/room", {
+      await fetch(CREATE_ROOM_URL, {
         method: "POST",
         headers: {
           "content-type": "application/json",

@@ -10,7 +10,9 @@ interface Order {
   updatedAt: string;
 }
 
-const GET_ORDERS_URL = "http://localhost:3001/order";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+const GET_ORDERS_URL = `${API_URL}/order`;
 const useOrder = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   //   responseable to fetch intital data through api.

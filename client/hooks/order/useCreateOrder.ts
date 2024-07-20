@@ -1,10 +1,14 @@
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 const Initial_data = {
   customer: "",
   address: "",
   price: 0,
 };
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const CREATE_ORDER_URL = `${API_URL}/order`;
+
 const useCreateOrder = () => {
   const [data, setData] = useState(Initial_data);
 
@@ -18,7 +22,7 @@ const useCreateOrder = () => {
     if (!data.address || !data.customer || !data.price) return;
 
     try {
-      await fetch("http://localhost:3001/order", {
+      await fetch(CREATE_ORDER_URL, {
         method: "POST",
         headers: {
           "content-type": "application/json",
