@@ -9,12 +9,14 @@ import {
   Restaurant,
   RestaurantSchema,
 } from 'src/modules/restaurant/restaurant.schema';
+import { Dish, DishSchema } from '../restaurant/dish/dish.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { schema: RoomSchema, name: Room.name },
       { schema: RestaurantSchema, name: Restaurant.name },
+      { schema: DishSchema, name: Dish.name },
     ]),
     ShopeefoodModule,
   ],

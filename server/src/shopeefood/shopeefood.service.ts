@@ -46,7 +46,7 @@ export class ShopeeFoodService {
         ),
       );
 
-      this.logger.log(`Successfully fetched data from URL: ${URL}`);
+      this.logger.log(`Successfully fetched data from URL: ${shopeeFoodUrl}`);
       return response.reply;
     } catch (error) {
       this.logger.error(
@@ -147,7 +147,7 @@ export class ShopeeFoodService {
     }
   }
 
-  async getDishesWeb(delivery_id: string): Promise<any> {
+  async getRestaurantDishes(delivery_id: string): Promise<any> {
     try {
       const API = `${SHOPEE_API}/dish/get_delivery_dishes?id_type=2&request_id=${delivery_id}`;
 

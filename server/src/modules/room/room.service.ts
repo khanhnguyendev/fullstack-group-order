@@ -5,6 +5,7 @@ import { Room } from './room.schema';
 import { RoomGateway } from './room.gateway';
 import { ShopeeFoodService } from 'src/shopeefood/shopeefood.service';
 import { Restaurant } from 'src/modules/restaurant/restaurant.schema';
+import { Dish } from '../restaurant/dish/dish.schema';
 
 @Injectable()
 export class RoomService {
@@ -15,6 +16,8 @@ export class RoomService {
     private readonly roomModel: Model<Room>,
     @InjectModel(Restaurant.name)
     private readonly restaurantModel: Model<Restaurant>,
+    @InjectModel(Dish.name)
+    private readonly dishModel: Model<Dish>,
     private readonly roomGateway: RoomGateway,
     private readonly shopeefoodService: ShopeeFoodService,
   ) {}
@@ -42,6 +45,7 @@ export class RoomService {
   }
 
   async create(roomData: Room): Promise<Room> {
+    const startTime = new Date();
     try {
       // Step 1: Fetch restaurant info from ShopeeFood
       const restaurantInfo = await this.fetchRestaurantInfo(roomData.url);
@@ -74,10 +78,39 @@ export class RoomService {
         room_id: savedRoom._id,
       });
       await restaurant.save();
-      this.logger.log('New restaurant created:', restaurant);
+      this.logger.log('New restaurant added');
+
+      // Step 5: Fetch restaurant dishes from ShopeeFood
+      const restaurantDishes = await this.fetchRestaurantDishes(
+        restaurantInfo.delivery_id,
+      );
+      if (!restaurantDishes) {
+        throw new Error('Restaurant dishes could not be retrieved');
+      }
+
+      // Step 6: Create and save the restaurant dishes
+      this.logger.log('Removing old dishes...');
+      await this.dishModel.deleteMany({
+        restaurant_id: restaurantInfo.restaurant_id,
+        delivery_id: restaurantInfo.delivery_id,
+      });
+      this.logger.log('Creating new dishes...');
+      const newDishes = restaurantDishes.map((dish) => ({
+        ...dish,
+        room_id: savedRoom._id,
+        restaurant_id: restaurantInfo.restaurant_id,
+        delivery_id: restaurantInfo.delivery_id,
+      }));
+      await this.dishModel.insertMany(newDishes);
+      this.logger.log(`Total added dishes: ${newDishes.length}`);
 
       // Notify all clients about the new room
       this.roomGateway.notify('room-created', savedRoom);
+
+      const endTime = new Date();
+      this.logger.log(
+        `Room creation completed in ${endTime.getTime() - startTime.getTime()}ms`,
+      );
 
       return savedRoom;
     } catch (error) {
@@ -94,7 +127,11 @@ export class RoomService {
     return info;
   }
 
-  private async fetchRestaurantDetails(restaurantId: string): Promise<any> {
-    return this.shopeefoodService.getRestaurantDetail(restaurantId);
+  private async fetchRestaurantDetails(restaurant_id: string): Promise<any> {
+    return this.shopeefoodService.getRestaurantDetail(restaurant_id);
+  }
+
+  private async fetchRestaurantDishes(delivery_id: string): Promise<any> {
+    return this.shopeefoodService.getRestaurantDishes(delivery_id);
   }
 }
