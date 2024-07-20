@@ -1,48 +1,117 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
-// Define the IPhoto interface
-export interface IPhoto {
+@Schema()
+class Price {
+  @Prop({ required: false })
+  text: string;
+
+  @Prop({ required: false })
+  unit: string;
+
+  @Prop({ required: true })
+  value: number;
+}
+
+const PriceSchema = SchemaFactory.createForClass(Price);
+
+@Schema()
+class Photo {
+  @Prop({ required: true })
   width: number;
+
+  @Prop({ required: true })
+  value: string;
+
+  @Prop({ required: true })
   height: number;
-  value: string; // URL of the photo
 }
 
-// Define the IOptionItem interface
-export interface IOptionItem {
+const PhotoSchema = SchemaFactory.createForClass(Photo);
+
+@Schema()
+class OptionItem {
+  @Prop({ required: true })
+  name: string;
+
+  @Prop({ required: true })
+  weight: number;
+
+  @Prop({ type: PriceSchema, required: true })
+  ntop_price: Price;
+
+  @Prop({ required: true })
+  max_quantity: number;
+
+  @Prop({ required: true })
+  is_default: boolean;
+
+  @Prop({ required: true })
+  top_order: number;
+
+  @Prop({ type: PriceSchema, required: true })
+  price: Price;
+}
+
+const OptionItemSchema = SchemaFactory.createForClass(OptionItem);
+
+@Schema()
+class OptionItems {
+  @Prop({ required: true })
   min_select: number;
+
+  @Prop({ required: true })
   max_select: number;
-  items: string[]; // Adjust the type if needed based on actual item structure
+
+  @Prop({ type: [OptionItemSchema], required: true })
+  items: OptionItem[];
 }
 
-// Define the IDishOption interface
-export interface IDishOption {
-  ntop?: string; // Optional
+const OptionItemsSchema = SchemaFactory.createForClass(OptionItems);
+
+@Schema()
+class Option {
+  @Prop({ required: false })
+  ntop: string;
+
+  @Prop({ required: false })
   mandatory: boolean;
+
+  @Prop({ required: false })
   id: number;
-  option_items: IOptionItem;
+
+  @Prop({ type: OptionItemsSchema, required: false })
+  option_items: OptionItems;
+
+  @Prop({ required: false })
   name: string;
 }
 
-// Define the IWeekDay interface for the time property
-export interface IWeekDay {
-  start: string; // Time in HH:MM format
-  end: string; // Time in HH:MM format
-  week_day: number; // Day of the week (1 = Monday, 7 = Sunday)
-}
+const OptionSchema = SchemaFactory.createForClass(Option);
 
-// Define the IDishTime interface
-export interface IDishTime {
-  available: string[]; // List of available times
-  week_days: IWeekDay[]; // List of week days with time slots
-  not_available: string[]; // List of times or days not available
-}
-
-@Schema({ timestamps: true })
-export class Dish {
+@Schema()
+class Time {
   @Prop({ required: true })
-  dish_type_id: number;
+  available: [];
 
+  @Prop({
+    required: true,
+    type: [{ start: String, week_day: Number, end: String }],
+  })
+  week_days: {
+    start: string;
+    week_day: number;
+    end: string;
+  }[];
+
+  @Prop({ required: true })
+  not_available: [];
+}
+
+const TimeSchema = SchemaFactory.createForClass(Time);
+
+@Schema()
+export class Dish {
   @Prop({ required: true })
   room_id: string;
 
@@ -53,97 +122,64 @@ export class Dish {
   delivery_id: number;
 
   @Prop({ required: true })
-  dish_type_name: string;
-
-  @Prop({
-    type: {
-      text: String,
-      unit: String,
-      value: Number,
-    },
-    required: false,
-  })
-  price: {
-    text: string;
-    unit: string;
-    value: number;
-  };
-
-  @Prop({ default: false })
   is_deleted: boolean;
 
-  @Prop({ default: '' })
-  description: string;
+  @Prop()
+  description?: string;
 
-  @Prop({ default: true })
+  @Prop({ required: true })
+  name: string;
+
+  @Prop({ type: PriceSchema, required: true })
+  price: Price;
+
+  @Prop({ type: PriceSchema })
+  discount_price?: Price;
+
+  @Prop({ required: true })
   is_active: boolean;
 
-  @Prop({ default: 0 })
-  display_order: number;
-
-  @Prop({ default: '0' })
+  @Prop({ required: true })
   total_like: string;
 
-  @Prop({ type: [String], default: [] })
-  properties: string[];
+  @Prop({ type: [String] })
+  properties?: string[];
 
-  @Prop({
-    type: [{ width: Number, height: Number, value: String }],
-    default: [],
-  })
-  photos: IPhoto[];
+  @Prop({ type: [PhotoSchema] })
+  photos?: Photo[];
 
-  @Prop({
-    type: [
-      {
-        ntop: String,
-        mandatory: Boolean,
-        id: Number,
-        option_items: {
-          min_select: Number,
-          max_select: Number,
-          items: [String],
-        },
-        name: String,
-      },
-    ],
-    default: [],
-  })
-  options: IDishOption[];
+  @Prop({ type: [OptionSchema] })
+  options?: Option[];
 
-  @Prop({ default: true })
+  @Prop({ required: true })
   is_available: boolean;
 
-  @Prop({ default: false })
+  @Prop({ required: true })
   is_group_discount_item: boolean;
 
-  @Prop({
-    type: {
-      available: [String],
-      week_days: [
-        {
-          start: String,
-          end: String,
-          week_day: Number,
-        },
-      ],
-      not_available: [String],
-    },
-    default: {
-      available: [],
-      week_days: [],
-      not_available: [],
-    },
-  })
-  time: IDishTime;
+  @Prop({ type: TimeSchema, required: true })
+  time: Time;
 
-  @Prop({ default: 0 })
+  @Prop({ required: true })
+  id: number;
+
+  @Prop({ required: true })
+  display_order: number;
+
+  @Prop({ required: false })
+  mms_image: string;
+
+  @Prop({ required: true })
   quantity: number;
 
-  @Prop({ default: '' })
-  mms_image: string;
+  @Prop({ required: true })
+  dish_type_id: number;
+
+  @Prop({ required: true })
+  dish_type_name: string;
 }
 
 export const DishSchema = SchemaFactory.createForClass(Dish);
 
-export type DishDocument = HydratedDocument<Dish>;
+// types
+export type DishDocument = Dish & Document;

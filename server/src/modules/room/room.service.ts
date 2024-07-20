@@ -95,12 +95,90 @@ export class RoomService {
         delivery_id: restaurantInfo.delivery_id,
       });
       this.logger.log('Creating new dishes...');
-      const newDishes = restaurantDishes.map((dish) => ({
-        ...dish,
-        room_id: savedRoom._id,
-        restaurant_id: restaurantInfo.restaurant_id,
-        delivery_id: restaurantInfo.delivery_id,
-      }));
+      const newDishes = restaurantDishes.flatMap((dishType) =>
+        dishType.dishes.map((dish) => ({
+          is_deleted: dish.is_deleted !== undefined ? dish.is_deleted : false,
+          description: dish.description || '',
+          name: dish.name || 'Unknown Dish',
+          price: {
+            text: dish.price?.text || '',
+            unit: dish.price?.unit || '',
+            value: dish.price?.value !== undefined ? dish.price.value : 0,
+          },
+          discount_price: dish.discount_price
+            ? {
+                text: dish.discount_price?.text || '',
+                unit: dish.discount_price?.unit || '',
+                value:
+                  dish.discount_price?.value !== undefined
+                    ? dish.discount_price.value
+                    : 0,
+              }
+            : undefined,
+          is_active: dish.is_active !== undefined ? dish.is_active : false,
+          total_like: dish.total_like || '0',
+          properties: dish.properties || [],
+          photos: dish.photos || [],
+          options:
+            dish.options.map((option) => ({
+              ntop: option.ntop || '',
+              mandatory:
+                option.mandatory !== undefined ? option.mandatory : false,
+              id: option.id !== undefined ? option.id : 0,
+              option_items: {
+                min_select: option.option_items?.min_select || 0,
+                max_select: option.option_items?.max_select || 0,
+                items:
+                  option.option_items?.items.map((item) => ({
+                    name: item.name || '',
+                    weight: item.weight || 0,
+                    ntop_price: {
+                      text: item.ntop_price?.text || '',
+                      unit: item.ntop_price?.unit || '',
+                      value:
+                        item.ntop_price?.value !== undefined
+                          ? item.ntop_price.value
+                          : 0,
+                    },
+                    max_quantity:
+                      item.max_quantity !== undefined ? item.max_quantity : 0,
+                    is_default:
+                      item.is_default !== undefined ? item.is_default : false,
+                    top_order:
+                      item.top_order !== undefined ? item.top_order : 0,
+                    price: {
+                      text: item.price?.text || '',
+                      unit: item.price?.unit || '',
+                      value:
+                        item.price?.value !== undefined ? item.price.value : 0,
+                    },
+                  })) || [],
+              },
+              name: option.name || '',
+            })) || [],
+          is_available:
+            dish.is_available !== undefined ? dish.is_available : false,
+          is_group_discount_item:
+            dish.is_group_discount_item !== undefined
+              ? dish.is_group_discount_item
+              : false,
+          time: dish.time || {
+            available: [],
+            week_days: [],
+            not_available: [],
+          },
+          id: dish.id !== undefined ? dish.id : 0,
+          display_order:
+            dish.display_order !== undefined ? dish.display_order : 0,
+          mms_image: dish.mms_image || '',
+          quantity: dish.quantity !== undefined ? dish.quantity : 0,
+          dish_type_id: dishType.dish_type_id,
+          dish_type_name: dishType.dish_type_name,
+          room_id: savedRoom._id,
+          restaurant_id: restaurantInfo.restaurant_id,
+          delivery_id: restaurantInfo.delivery_id,
+        })),
+      );
       await this.dishModel.insertMany(newDishes);
       this.logger.log(`Total added dishes: ${newDishes.length}`);
 
