@@ -26,30 +26,27 @@ export class ShopeeFoodService {
   async getFromUrl(restaurantUrl: string): Promise<any> {
     try {
       const shopeeFoodUrl = extractRestaurantUrl(restaurantUrl);
-      const API = `${SHOPEE_API}/delivery/get_from_url?url=${shopeeFoodUrl}`;
+      const URL = `${SHOPEE_API}/delivery/get_from_url?url=${shopeeFoodUrl}`;
 
       const response = await lastValueFrom(
-        this.httpService.get(API, { headers: API_HEADERS }).pipe(
+        this.httpService.get(URL, { headers: API_HEADERS }).pipe(
           map((response) => {
             if (response.status !== 200) {
               throw new Error(
-                `Failed to fetch from URL: ${shopeeFoodUrl} - Status code: ${response.status}`,
+                `Failed to fetch from URL: ${URL} - Status code: ${response.status}`,
               );
             }
             return response.data;
           }),
           catchError((error) => {
-            this.logger.error(
-              `Error fetching from URL: ${shopeeFoodUrl}`,
-              error.stack,
-            );
+            this.logger.error(`Error fetching from URL: ${URL}`, error.stack);
             handleError(error);
             throw error;
           }),
         ),
       );
 
-      this.logger.log(`Successfully fetched data from URL: ${shopeeFoodUrl}`);
+      this.logger.log(`Successfully fetched data from URL: ${URL}`);
       return response.reply;
     } catch (error) {
       this.logger.error(
@@ -60,23 +57,23 @@ export class ShopeeFoodService {
     }
   }
 
-  async getRestaurantDetail(restaurantId: string): Promise<any> {
+  async getRestaurantDetail(restaurant_id: string): Promise<any> {
     try {
-      const API = `${SHOPEE_API}/delivery/get_detail?id_type=1&request_id=${restaurantId}`;
+      const URL = `${SHOPEE_API}/delivery/get_detail?id_type=1&request_id=${restaurant_id}`;
 
       const response = await lastValueFrom(
-        this.httpService.get(API, { headers: API_HEADERS }).pipe(
+        this.httpService.get(URL, { headers: API_HEADERS }).pipe(
           map((response) => {
             if (response.status !== 200) {
               throw new Error(
-                `Failed to fetch restaurant detail for ID: ${restaurantId} - Status code: ${response.status}`,
+                `Failed to fetch restaurant detail for restaurant_id: ${restaurant_id} - Status code: ${response.status}`,
               );
             }
             return response.data;
           }),
           catchError((error) => {
             this.logger.error(
-              `Error fetching restaurant detail for ID: ${restaurantId}`,
+              `Error fetching restaurant detail for restaurant_id: ${restaurant_id}`,
               error.stack,
             );
             handleError(error);
@@ -87,13 +84,13 @@ export class ShopeeFoodService {
 
       if (!response.reply) {
         this.logger.warn(
-          `No reply for restaurant detail with ID: ${restaurantId}`,
+          `No reply for restaurant detail with restaurant_id: ${restaurant_id}`,
         );
         return;
       }
 
       this.logger.log(
-        `Successfully fetched restaurant detail for ID: ${restaurantId}`,
+        `Successfully fetched restaurant detail for restaurant_id: ${restaurant_id}`,
       );
       return response.reply.delivery_detail;
     } catch (error) {
@@ -105,23 +102,23 @@ export class ShopeeFoodService {
     }
   }
 
-  async getDishesApp(restaurantId: string): Promise<any> {
+  async getDishesApp(restaurant_id: string): Promise<any> {
     try {
-      const API = `${SHOPEE_API}/v6/buyer/store/dishes?restaurant_id=${restaurantId}`;
+      const API = `${SHOPEE_API}/v6/buyer/store/dishes?restaurant_id=${restaurant_id}`;
 
       const response = await lastValueFrom(
         this.httpService.get(API, { headers: API_HEADERS }).pipe(
           map((response) => {
             if (response.status !== 200) {
               throw new Error(
-                `Failed to fetch dishes for restaurant ID: ${restaurantId} from APP - Status code: ${response.status}`,
+                `Failed to fetch dishes for restaurant restaurant_id: ${restaurant_id} from APP - Status code: ${response.status}`,
               );
             }
             return response.data;
           }),
           catchError((error) => {
             this.logger.error(
-              `Error fetching dishes for restaurant ID: ${restaurantId} from APP`,
+              `Error fetching dishes for restaurant restaurant_id: ${restaurant_id} from APP`,
               error.stack,
             );
             handleError(error);
@@ -132,13 +129,13 @@ export class ShopeeFoodService {
 
       if (!response.reply) {
         this.logger.warn(
-          `No reply while fetching dishes from ShopeeFood APP for restaurant ID: ${restaurantId}`,
+          `No reply while fetching dishes from ShopeeFood APP for restaurant_id: ${restaurant_id}`,
         );
         return;
       }
 
       this.logger.log(
-        `Successfully fetched dishes from ShopeeFood APP for restaurant ID: ${restaurantId}`,
+        `Successfully fetched dishes from ShopeeFood APP for restaurant_id: ${restaurant_id}`,
       );
       return response.reply;
     } catch (error) {
@@ -150,23 +147,23 @@ export class ShopeeFoodService {
     }
   }
 
-  async getDishesWeb(deliveryId: string): Promise<any> {
+  async getDishesWeb(delivery_id: string): Promise<any> {
     try {
-      const API = `${SHOPEE_API}/dish/get_delivery_dishes?id_type=2&request_id=${deliveryId}`;
+      const API = `${SHOPEE_API}/dish/get_delivery_dishes?id_type=2&request_id=${delivery_id}`;
 
       const response = await lastValueFrom(
         this.httpService.get(API, { headers: API_HEADERS }).pipe(
           map((response) => {
             if (response.status !== 200) {
               throw new Error(
-                `Failed to fetch dishes for delivery ID: ${deliveryId} from WEB - Status code: ${response.status}`,
+                `Failed to fetch dishes for delivery_id: ${delivery_id} from WEB - Status code: ${response.status}`,
               );
             }
             return response.data;
           }),
           catchError((error) => {
             this.logger.error(
-              `Error fetching dishes for delivery ID: ${deliveryId} from WEB`,
+              `Error fetching dishes for delivery_id: ${delivery_id} from WEB`,
               error.stack,
             );
             handleError(error);
@@ -177,13 +174,13 @@ export class ShopeeFoodService {
 
       if (!response.reply) {
         this.logger.warn(
-          `No reply while fetching dishes from ShopeeFood for delivery ID: ${deliveryId}`,
+          `No reply while fetching dishes from ShopeeFood for delivery_id: ${delivery_id}`,
         );
         return;
       }
 
       this.logger.log(
-        `Successfully fetched dishes from ShopeeFood for delivery ID: ${deliveryId}`,
+        `Successfully fetched dishes from ShopeeFood for delivery_id: ${delivery_id}`,
       );
       return response.reply.menu_infos;
     } catch (error) {

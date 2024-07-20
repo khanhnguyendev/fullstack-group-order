@@ -5,10 +5,14 @@ import { RoomGateway } from './room.gateway';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RoomController } from './room.controller';
 import { ShopeefoodModule } from 'src/shopeefood/shopeefood.module';
+import { Restaurant, RestaurantSchema } from 'src/restaurant/restaurant.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ schema: RoomSchema, name: Room.name }]),
+    MongooseModule.forFeature([
+      { schema: RoomSchema, name: Room.name },
+      { schema: RestaurantSchema, name: Restaurant.name },
+    ]),
     ShopeefoodModule,
   ],
   controllers: [RoomController],

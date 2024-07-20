@@ -4,80 +4,94 @@ import { Model } from 'mongoose';
 import { Room } from './room.schema';
 import { RoomGateway } from './room.gateway';
 import { ShopeeFoodService } from 'src/shopeefood/shopeefood.service';
+import { Restaurant } from 'src/restaurant/restaurant.schema';
 
 @Injectable()
 export class RoomService {
   private readonly logger = new Logger(RoomService.name);
 
   constructor(
-    @InjectModel(Room.name) private readonly roomModel: Model<Room>,
+    @InjectModel(Room.name)
+    private readonly roomModel: Model<Room>,
+    @InjectModel(Restaurant.name)
+    private readonly restaurantModel: Model<Restaurant>,
     private readonly roomGateway: RoomGateway,
     private readonly shopeefoodService: ShopeeFoodService,
   ) {}
 
-  async getAll(): Promise<Room[]> {
+  async getAllRooms(): Promise<Room[]> {
     try {
       return await this.roomModel.find().exec();
     } catch (error) {
-      this.logger.error('Error fetching all rooms', error.stack);
+      this.logger.error('Failed to fetch rooms', error.stack);
       throw error;
     }
   }
 
-  async getOne(id: string): Promise<Room> {
+  async getRoomById(id: string): Promise<Room> {
     try {
       const room = await this.roomModel.findById(id).exec();
-      this.logger.debug(`Room found: ${JSON.stringify(room)}`);
       if (!room) {
         throw new Error('Room not found');
       }
       return room;
     } catch (error) {
-      this.logger.error('Error fetching room', error.stack);
+      this.logger.error('Failed to fetch room', error.stack);
       throw error;
     }
   }
 
   async create(roomData: Room): Promise<Room> {
     try {
-      // get restaurant info from shopeefood
-      const restaurantInfo = await this.getRestaurantInfo(roomData.url);
+      // Step 1: Fetch restaurant info from ShopeeFood
+      const restaurantInfo = await this.fetchRestaurantInfo(roomData.url);
+      if (!restaurantInfo) {
+        throw new Error('Restaurant information could not be retrieved');
+      }
 
-      const newRoomData = {
+      // Step 2: Create and save the room
+      this.logger.log('Creating new room...');
+      const room = new this.roomModel({
         ...roomData,
         restaurant_id: restaurantInfo.restaurant_id,
         delivery_id: restaurantInfo.delivery_id,
-      };
+      });
+      const savedRoom = await room.save();
+      this.logger.log('New room created:', savedRoom);
 
-      // create new room
-      this.logger.log('Creating room with data:', newRoomData);
-      const newRoom = new this.roomModel(newRoomData);
-      await newRoom.save();
-      this.logger.log('Room created:', newRoom);
+      // Step 3: Fetch restaurant details from ShopeeFood
+      const restaurantDetails = await this.fetchRestaurantDetails(
+        restaurantInfo.restaurant_id,
+      );
+      if (!restaurantDetails) {
+        throw new Error('Restaurant details could not be retrieved');
+      }
 
-      // notify all clients about the new room
-      this.roomGateway.notify('room-created', newRoom);
+      // Step 4: Create and save the restaurant details
+      this.logger.log('Creating new restaurant...');
+      const restaurant = new this.restaurantModel(restaurantDetails);
+      await restaurant.save();
+      this.logger.log('New restaurant created:', restaurant);
 
-      return newRoom;
+      // Notify all clients about the new room
+      this.roomGateway.notify('room-created', savedRoom);
+
+      return savedRoom;
     } catch (error) {
-      this.logger.error('Error while creating room', error.stack);
+      this.logger.error('Error creating room', error.stack);
       throw error;
     }
   }
 
-  private async getRestaurantInfo(url: string): Promise<any> {
-    const restaurantInfo = await this.shopeefoodService.getFromUrl(url);
-
-    if (
-      !restaurantInfo ||
-      !restaurantInfo.restaurant_id ||
-      !restaurantInfo.delivery_id
-    ) {
-      this.logger.error(
-        `[ShopeeFoodAPI] Restaurant not found with url: ${url}`,
-      );
+  private async fetchRestaurantInfo(url: string): Promise<any> {
+    const info = await this.shopeefoodService.getFromUrl(url);
+    if (!info || !info.restaurant_id || !info.delivery_id) {
+      this.logger.error(`Restaurant info not found for URL: ${url}`);
     }
+    return info;
+  }
 
-    return restaurantInfo;
+  private async fetchRestaurantDetails(restaurantId: string): Promise<any> {
+    return this.shopeefoodService.getRestaurantDetail(restaurantId);
   }
 }

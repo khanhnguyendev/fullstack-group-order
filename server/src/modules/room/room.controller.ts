@@ -7,17 +7,17 @@ export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 
   @Get()
-  async findAll(): Promise<Room[]> {
-    return this.roomService.getAll();
+  async getAllRooms(): Promise<Room[]> {
+    return this.roomService.getAllRooms();
   }
 
   @Get(':id')
-  async getRoom(@Param('id') id: string): Promise<Room> {
-    return this.roomService.getOne(id);
+  async getRoomById(@Param('id') id: string): Promise<Room> {
+    return this.roomService.getRoomById(id);
   }
 
   @Post()
-  async create(@Body() orderData: Room): Promise<Room> {
-    return this.roomService.create(orderData);
+  async create(@Body() data: Room): Promise<Room> {
+    return this.roomService.create(data);
   }
 }
