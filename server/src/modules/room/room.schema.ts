@@ -22,4 +22,4 @@ export class Room {
 export const RoomSchema = SchemaFactory.createForClass(Room);
 
 // types
-export type OrderDocument = HydratedDocument<Room>;
+export type RoomDocument = HydratedDocument<Room>;

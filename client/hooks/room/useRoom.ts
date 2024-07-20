@@ -12,7 +12,10 @@ interface Room {
   updatedAt: string;
 }
 
-const GET_ROOMS_URL = "http://localhost:3001/room";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+const GET_ROOMS_URL = `${API_URL}/room`;
+
 const useRoom = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
   // responseable to fetch intital data through api.

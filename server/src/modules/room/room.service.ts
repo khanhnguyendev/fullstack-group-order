@@ -24,6 +24,20 @@ export class RoomService {
     }
   }
 
+  async getOne(id: string): Promise<Room> {
+    try {
+      const room = await this.roomModel.findById(id).exec();
+      this.logger.debug(`Room found: ${JSON.stringify(room)}`);
+      if (!room) {
+        throw new Error('Room not found');
+      }
+      return room;
+    } catch (error) {
+      this.logger.error('Error fetching room', error.stack);
+      throw error;
+    }
+  }
+
   async create(roomData: Room): Promise<Room> {
     try {
       // get restaurant info from shopeefood

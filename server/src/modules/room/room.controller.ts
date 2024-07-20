@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { Room } from './room.schema';
 
@@ -9,6 +9,11 @@ export class RoomController {
   @Get()
   async findAll(): Promise<Room[]> {
     return this.roomService.getAll();
+  }
+
+  @Get(':id')
+  async getRoom(@Param('id') id: string): Promise<Room> {
+    return this.roomService.getOne(id);
   }
 
   @Post()
