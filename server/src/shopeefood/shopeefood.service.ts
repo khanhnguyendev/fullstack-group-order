@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { extractRestaurantUrl, handleError } from 'src/common/utils/utils';
 import { lastValueFrom } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -25,7 +24,7 @@ export class ShopeeFoodService {
 
   async getFromUrl(restaurantUrl: string): Promise<any> {
     try {
-      const shopeeFoodUrl = extractRestaurantUrl(restaurantUrl);
+      const shopeeFoodUrl = this.extractRestaurantUrl(restaurantUrl);
       const URL = `${SHOPEE_API}/delivery/get_from_url?url=${shopeeFoodUrl}`;
 
       const response = await lastValueFrom(
@@ -40,7 +39,6 @@ export class ShopeeFoodService {
           }),
           catchError((error) => {
             this.logger.error(`Error fetching from URL: ${URL}`, error.stack);
-            handleError(error);
             throw error;
           }),
         ),
@@ -53,7 +51,6 @@ export class ShopeeFoodService {
         `Unhandled error in getFromUrl: ${error.message}`,
         error.stack,
       );
-      handleError(error);
     }
   }
 
@@ -76,7 +73,6 @@ export class ShopeeFoodService {
               `Error fetching restaurant detail for restaurant_id: ${restaurant_id}`,
               error.stack,
             );
-            handleError(error);
             throw error;
           }),
         ),
@@ -98,7 +94,6 @@ export class ShopeeFoodService {
         `Unhandled error in getRestaurantDetail: ${error.message}`,
         error.stack,
       );
-      handleError(error);
     }
   }
 
@@ -121,7 +116,6 @@ export class ShopeeFoodService {
               `Error fetching dishes for restaurant restaurant_id: ${restaurant_id} from APP`,
               error.stack,
             );
-            handleError(error);
             throw error;
           }),
         ),
@@ -143,7 +137,6 @@ export class ShopeeFoodService {
         `Unhandled error in getDishesApp: ${error.message}`,
         error.stack,
       );
-      handleError(error);
     }
   }
 
@@ -166,7 +159,6 @@ export class ShopeeFoodService {
               `Error fetching dishes for delivery_id: ${delivery_id} from WEB`,
               error.stack,
             );
-            handleError(error);
             throw error;
           }),
         ),
@@ -188,7 +180,6 @@ export class ShopeeFoodService {
         `Unhandled error in getDishesWeb: ${error.message}`,
         error.stack,
       );
-      handleError(error);
     }
   }
 
@@ -204,7 +195,6 @@ export class ShopeeFoodService {
               `Error fetching topping from API: ${API}`,
               error.stack,
             );
-            handleError(error);
             throw error;
           }),
         ),
@@ -217,7 +207,18 @@ export class ShopeeFoodService {
         `Unhandled error in getToppingWeb: ${error.message}`,
         error.stack,
       );
-      handleError(error);
     }
   }
+
+  private extractRestaurantUrl = (url: string) => {
+    const regex = /\/([^/]+\/[^/?]+)(\?|$)/;
+    const match = url.match(regex);
+
+    if (match && match[1]) {
+      return match[1];
+    }
+
+    // If no match is found, return null or handle accordingly
+    return null;
+  };
 }
