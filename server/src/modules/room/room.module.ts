@@ -9,7 +9,7 @@ import {
   Restaurant,
   RestaurantSchema,
 } from 'src/modules/restaurant/restaurant.schema';
-import { Dish, DishSchema } from '../restaurant/dish/dish.schema';
+import { Dish, DishSchema } from '../dish/dish.schema';
 
 @Module({
   imports: [

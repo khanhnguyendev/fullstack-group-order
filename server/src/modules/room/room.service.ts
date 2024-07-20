@@ -5,7 +5,7 @@ import { Room } from './room.schema';
 import { RoomGateway } from './room.gateway';
 import { ShopeeFoodService } from 'src/shopeefood/shopeefood.service';
 import { Restaurant } from 'src/modules/restaurant/restaurant.schema';
-import { Dish } from '../restaurant/dish/dish.schema';
+import { Dish } from '../dish/dish.schema';
 
 @Injectable()
 export class RoomService {
