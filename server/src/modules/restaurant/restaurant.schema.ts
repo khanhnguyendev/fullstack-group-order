@@ -17,6 +17,9 @@ export interface IRating {
 @Schema({ timestamps: true })
 export class Restaurant {
   @Prop({ required: true })
+  room_id: string;
+
+  @Prop({ required: true })
   restaurant_id: number;
 
   @Prop({ required: true })

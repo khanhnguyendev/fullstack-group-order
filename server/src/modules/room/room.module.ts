@@ -5,7 +5,10 @@ import { RoomGateway } from './room.gateway';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RoomController } from './room.controller';
 import { ShopeefoodModule } from 'src/shopeefood/shopeefood.module';
-import { Restaurant, RestaurantSchema } from 'src/restaurant/restaurant.schema';
+import {
+  Restaurant,
+  RestaurantSchema,
+} from 'src/modules/restaurant/restaurant.schema';
 
 @Module({
   imports: [

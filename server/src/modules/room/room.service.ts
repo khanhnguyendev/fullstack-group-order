@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { Room } from './room.schema';
 import { RoomGateway } from './room.gateway';
 import { ShopeeFoodService } from 'src/shopeefood/shopeefood.service';
-import { Restaurant } from 'src/restaurant/restaurant.schema';
+import { Restaurant } from 'src/modules/restaurant/restaurant.schema';
 
 @Injectable()
 export class RoomService {
@@ -69,7 +69,10 @@ export class RoomService {
 
       // Step 4: Create and save the restaurant details
       this.logger.log('Creating new restaurant...');
-      const restaurant = new this.restaurantModel(restaurantDetails);
+      const restaurant = new this.restaurantModel({
+        ...restaurantDetails,
+        room_id: savedRoom._id,
+      });
       await restaurant.save();
       this.logger.log('New restaurant created:', restaurant);
 
