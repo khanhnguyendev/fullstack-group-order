@@ -1,114 +1,51 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
-@Schema()
-class Price {
-  @Prop({ required: false })
-  text: string;
-
-  @Prop({ required: false })
-  unit: string;
-
-  @Prop({ required: true })
+export interface Price {
+  text?: string;
+  unit?: string;
   value: number;
 }
 
-const PriceSchema = SchemaFactory.createForClass(Price);
-
-@Schema()
-class Photo {
-  @Prop({ required: true })
+export interface Photo {
   width: number;
-
-  @Prop({ required: true })
   value: string;
-
-  @Prop({ required: true })
   height: number;
 }
 
-const PhotoSchema = SchemaFactory.createForClass(Photo);
-
-@Schema()
-class OptionItem {
-  @Prop({ required: true })
+export interface OptionItem {
   name: string;
-
-  @Prop({ required: true })
   weight: number;
-
-  @Prop({ type: PriceSchema, required: true })
   ntop_price: Price;
-
-  @Prop({ required: true })
   max_quantity: number;
-
-  @Prop({ required: true })
   is_default: boolean;
-
-  @Prop({ required: true })
   top_order: number;
-
-  @Prop({ type: PriceSchema, required: true })
   price: Price;
 }
 
-const OptionItemSchema = SchemaFactory.createForClass(OptionItem);
-
-@Schema()
-class OptionItems {
-  @Prop({ required: true })
+export interface OptionItems {
   min_select: number;
-
-  @Prop({ required: true })
   max_select: number;
-
-  @Prop({ type: [OptionItemSchema], required: true })
   items: OptionItem[];
 }
 
-const OptionItemsSchema = SchemaFactory.createForClass(OptionItems);
-
-@Schema()
-class Option {
-  @Prop({ required: false })
-  ntop: string;
-
-  @Prop({ required: false })
-  mandatory: boolean;
-
-  @Prop({ required: false })
-  id: number;
-
-  @Prop({ type: OptionItemsSchema, required: false })
-  option_items: OptionItems;
-
-  @Prop({ required: false })
-  name: string;
+export interface Option {
+  ntop?: string;
+  mandatory?: boolean;
+  id?: number;
+  option_items?: OptionItems;
+  name?: string;
 }
 
-const OptionSchema = SchemaFactory.createForClass(Option);
-
-@Schema()
-class Time {
-  @Prop({ required: true })
-  available: [];
-
-  @Prop({
-    required: true,
-    type: [{ start: String, week_day: Number, end: String }],
-  })
+export interface Time {
+  available: any[];
   week_days: {
     start: string;
     week_day: number;
     end: string;
   }[];
-
-  @Prop({ required: true })
-  not_available: [];
+  not_available: any[];
 }
-
-const TimeSchema = SchemaFactory.createForClass(Time);
 
 @Schema()
 export class Dish {
@@ -130,10 +67,10 @@ export class Dish {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ type: PriceSchema, required: true })
+  @Prop({ type: Object, required: true })
   price: Price;
 
-  @Prop({ type: PriceSchema })
+  @Prop({ type: Object })
   discount_price?: Price;
 
   @Prop({ required: true })
@@ -145,10 +82,10 @@ export class Dish {
   @Prop({ type: [String] })
   properties?: string[];
 
-  @Prop({ type: [PhotoSchema] })
+  @Prop({ type: [Object] })
   photos?: Photo[];
 
-  @Prop({ type: [OptionSchema] })
+  @Prop({ type: [Object] })
   options?: Option[];
 
   @Prop({ required: true })
@@ -157,7 +94,7 @@ export class Dish {
   @Prop({ required: true })
   is_group_discount_item: boolean;
 
-  @Prop({ type: TimeSchema, required: true })
+  @Prop({ type: Object, required: true })
   time: Time;
 
   @Prop({ required: true })
@@ -167,7 +104,7 @@ export class Dish {
   display_order: number;
 
   @Prop({ required: false })
-  mms_image: string;
+  mms_image?: string;
 
   @Prop({ required: true })
   quantity: number;

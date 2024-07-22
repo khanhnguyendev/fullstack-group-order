@@ -46,6 +46,7 @@ export class RoomService {
 
   async create(roomData: Room): Promise<Room> {
     const startTime = new Date();
+    this.logger.log('Creating new room...');
     try {
       // Step 1: Fetch restaurant info from ShopeeFood
       const restaurantInfo = await this.fetchRestaurantInfo(roomData.url);
@@ -54,7 +55,6 @@ export class RoomService {
       }
 
       // Step 2: Create and save the room
-      this.logger.log('Creating new room...');
       const room = new this.roomModel({
         ...roomData,
         restaurant_id: restaurantInfo.restaurant_id,
