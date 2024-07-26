@@ -3,10 +3,12 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
+  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { SocketService } from '../socket/socket.service';
 
 @WebSocketGateway({ cors: true })
 export class RoomGateway
@@ -16,11 +18,14 @@ export class RoomGateway
 
   @WebSocketServer() wss: Server;
 
+  constructor(private readonly socketService: SocketService) {}
+
   // keep track of connected client IDs
   private connectedClients: Set<string> = new Set();
 
   afterInit(server: Server) {
-    this.logger.log('Initilized');
+    this.logger.log('RoomGateway initialized');
+    this.socketService.setServer(this.wss);
   }
 
   handleConnection(client: Socket, ...args: any[]) {
@@ -35,7 +40,23 @@ export class RoomGateway
     this.logger.log(`Total connected clients: ${this.connectedClients.size}`);
   }
 
-  notify<T>(event: string, data: T): void {
-    this.wss.emit(event, data);
+  @SubscribeMessage('joinRoom')
+  handleJoinRoom(client: Socket, room: string) {
+    client.join(room);
+    this.logger.log(`Client ${client.id} joined room ${room}`);
+  }
+
+  @SubscribeMessage('leaveRoom')
+  handleLeaveRoom(client: Socket, room: string) {
+    client.leave(room);
+    this.logger.log(`Client ${client.id} left room ${room}`);
+  }
+
+  notify<T>(
+    event: string,
+    type: string,
+    message: { sender: string; roomId?: string; data: T },
+  ): void {
+    this.socketService.notify(event, type, message);
   }
 }
