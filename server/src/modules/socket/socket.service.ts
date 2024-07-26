@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Server } from 'socket.io';
 
 @Injectable()
 export class SocketService {
+  private readonly logger = new Logger(SocketService.name);
   private wss: Server;
 
   setServer(wss: Server) {
@@ -16,8 +17,13 @@ export class SocketService {
   ): void {
     if (type === 'toAll') {
       this.wss.emit(event, message.data);
-    } else {
-      this.wss.to(message.roomId).emit(event, message.data);
+      return;
     }
+    if (!message.roomId) {
+      return this.logger.error(
+        `Cannot send socket message to room ${message.roomId}`,
+      );
+    }
+    this.wss.to(message.roomId).emit(event, message.data);
   }
 }
