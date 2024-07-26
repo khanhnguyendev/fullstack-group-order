@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Room } from './room.schema';
 import { RoomGateway } from './room.gateway';
-import { ShopeeFoodService } from 'src/shopeefood/shopeefood.service';
+import { ShopeeFoodService } from 'src/modules/shopeefood/shopeefood.service';
 import { Restaurant } from 'src/modules/restaurant/restaurant.schema';
 import { Dish } from '../dish/dish.schema';
 

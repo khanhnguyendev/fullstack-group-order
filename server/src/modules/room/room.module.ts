@@ -4,7 +4,7 @@ import { RoomService } from './room.service';
 import { RoomGateway } from './room.gateway';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RoomController } from './room.controller';
-import { ShopeefoodModule } from 'src/shopeefood/shopeefood.module';
+import { ShopeefoodModule } from 'src/modules/shopeefood/shopeefood.module';
 import {
   Restaurant,
   RestaurantSchema,
