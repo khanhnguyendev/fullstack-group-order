@@ -10,6 +10,7 @@ import {
   RestaurantSchema,
 } from 'src/modules/restaurant/restaurant.schema';
 import { Dish, DishSchema } from '../dish/dish.schema';
+import { SocketModule } from '../socket/socket.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { Dish, DishSchema } from '../dish/dish.schema';
       { schema: RestaurantSchema, name: Restaurant.name },
       { schema: DishSchema, name: Dish.name },
     ]),
+    SocketModule,
     ShopeefoodModule,
   ],
   controllers: [RoomController],
