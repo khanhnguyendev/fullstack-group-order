@@ -28,14 +28,18 @@ const useRoom = () => {
     fetchOrders();
   }, []);
 
-  // subscribes to realtime updates when room is created on server.
+  // Subscribe to real-time updates when a room is created on the server.
   useEffect(() => {
-    socket.on("room-created", (newData: Room) => {
+    const handleRoomCreated = (newData: Room) => {
       setRooms((prevData) => [...prevData, newData]);
       alert(`New room created: ${newData._id}`);
-    });
+    };
+
+    socket.on("room-created", handleRoomCreated);
+
+    // Cleanup: Ensure the event listener is removed when the component is unmounted
     return () => {
-      socket.off("notifyToAll");
+      socket.off("room-created", handleRoomCreated);
     };
   }, []);
 
