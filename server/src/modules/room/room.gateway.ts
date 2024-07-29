@@ -52,11 +52,7 @@ export class RoomGateway
     this.logger.log(`Client ${client.id} left room ${room}`);
   }
 
-  notify<T>(
-    event: string,
-    type: string,
-    message: { sender: string; roomId?: string; data: T },
-  ): void {
+  notify<T>(event: string, type: string, message: T): void {
     this.socketService.notify(event, type, message);
   }
 }

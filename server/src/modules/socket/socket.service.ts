@@ -10,20 +10,16 @@ export class SocketService {
     this.wss = wss;
   }
 
-  notify<T>(
-    event: string,
-    type: string,
-    message: { sender: string; roomId?: string; data: T },
-  ): void {
+  notify<T>(event: string, type: string, message: T): void {
     if (type === 'toAll') {
-      this.wss.emit(event, message.data);
+      this.wss.emit(event, message);
       return;
     }
-    if (!message.roomId) {
-      return this.logger.error(
-        `Cannot send socket message to room ${message.roomId}`,
-      );
+
+    const roomId = (message as any).roomId; // Adjusted to expect roomId in the message if needed
+    if (!roomId) {
+      return this.logger.error(`Cannot send socket message to room ${roomId}`);
     }
-    this.wss.to(message.roomId).emit(event, message.data);
+    this.wss.to(roomId).emit(event, message);
   }
 }
