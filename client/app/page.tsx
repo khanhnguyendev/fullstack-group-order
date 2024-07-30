@@ -1,12 +1,25 @@
-import RoomList from "@/components/RoomList";
+'use client'
+import { createTheme, MantineProvider } from '@mantine/core';
+import { Button, Container } from '@mantine/core';
+import { useRouter } from 'next/navigation'
 
-const Home = () => {
+
+const theme = createTheme({
+  fontFamily: 'Montserrat, sans-serif',
+  defaultRadius: 'md',
+});
+
+export default function Home() {
+  const router = useRouter()
   return (
-    <>
-      <h1 className="font-bold text-2xl text-center mt-3">Rooms</h1>
-      <RoomList />
-    </>
+    <MantineProvider theme={theme}>
+      <h1 className="font-bold text-2xl text-center mt-3">Home</h1>
+      <Container size="lg">
+        <Button variant="filled" onClick={() => router.push('/room')}>Rooms</Button>
+        <Button variant="filled" onClick={() => router.push('/room/create')}>Add new</Button>
+
+      </Container>
+
+    </MantineProvider>
   );
 };
-
-export default Home;
