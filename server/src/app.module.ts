@@ -6,7 +6,7 @@ import { ShopeefoodModule } from './modules/shopeefood/shopeefood.module';
 import { RestaurantModule } from './modules/restaurant/restaurant.module';
 import { DishModule } from './modules/dish/dish.module';
 import { SocketModule } from './modules/socket/socket.module';
-import { LoggingMiddleware } from './logging/logging.middleware';
+import { LoggingMiddleware } from './common/logging/logging.middleware';
 
 dotenv.config();
 
