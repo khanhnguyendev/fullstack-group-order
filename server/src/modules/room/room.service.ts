@@ -3,9 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Room } from './room.schema';
 import { RoomGateway } from './room.gateway';
-import { ShopeeFoodService } from 'src/modules/shopeefood/shopeefood.service';
-import { Restaurant } from 'src/modules/restaurant/restaurant.schema';
 import { Dish } from '../dish/dish.schema';
+import { NotFoundException } from '@common/exceptions/types/not-found.exception';
+import { Restaurant } from '@modules/restaurant/restaurant.schema';
+import { ShopeeFoodService } from '@modules/shopeefood/shopeefood.service';
 
 @Injectable()
 export class RoomService {
@@ -36,7 +37,7 @@ export class RoomService {
     try {
       const room = await this.roomModel.findById(id).exec();
       if (!room) {
-        throw new Error('Room not found');
+        throw new NotFoundException('Room not found');
       }
       return room;
     } catch (error) {
@@ -52,7 +53,9 @@ export class RoomService {
       // Step 1: Fetch restaurant info from ShopeeFood
       const restaurantInfo = await this.fetchRestaurantInfo(roomData.url);
       if (!restaurantInfo) {
-        throw new Error('Restaurant information could not be retrieved');
+        throw new NotFoundException(
+          'Restaurant information could not be retrieved',
+        );
       }
 
       // Step 2: Create and save the room
@@ -69,7 +72,9 @@ export class RoomService {
         restaurantInfo.restaurant_id,
       );
       if (!restaurantDetails) {
-        throw new Error('Restaurant details could not be retrieved');
+        throw new NotFoundException(
+          'Restaurant details could not be retrieved',
+        );
       }
 
       // Step 4: Create and save the restaurant details
@@ -86,7 +91,7 @@ export class RoomService {
         restaurantInfo.delivery_id,
       );
       if (!restaurantDishes) {
-        throw new Error('Restaurant dishes could not be retrieved');
+        throw new NotFoundException('Restaurant dishes could not be retrieved');
       }
 
       // Step 6: Create and save the restaurant dishes
