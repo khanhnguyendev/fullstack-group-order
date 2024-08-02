@@ -9,7 +9,7 @@ export class OrderController {
 
   @Get(':room_id')
   async findAllByRoomId(room_id: string): Promise<SuccessResponse<Order[]>> {
-    const orders = await this.orderService.getAllByRoomId();
+    const orders = await this.orderService.getAllByRoomId(room_id);
     return ResponseUtil.success(orders);
   }
 
