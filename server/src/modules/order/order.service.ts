@@ -18,7 +18,7 @@ export class OrderService {
 
   async getAllByRoomId(room_id: string): Promise<Order[]> {
     try {
-      return this.orderModel.find({ room_id }).exec();
+      return await this.orderModel.find({ room_id }).exec();
     } catch (error) {
       this.logger.error('Failed to get orders by room ID', error.stack);
       throw error;
