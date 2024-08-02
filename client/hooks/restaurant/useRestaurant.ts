@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 interface IPhoto {
+  _id: Key | null | undefined;
   width?: number;
   value?: string;
   height?: number;

@@ -1,9 +1,11 @@
 "use client";
 
+import CardCommon from "@/components/CardCommon";
 import useDish from "@/hooks/dish/useDish";
 import useRestaurant from "@/hooks/restaurant/useRestaurant";
 import useRoomDetail from "@/hooks/room/useRoomDetail";
 import { SearchParamProps } from "@/types";
+import { Grid, MantineProvider, Title, Container } from "@mantine/core";
 
 const RoomDetail = ({ params: { id } }: SearchParamProps) => {
   const { room } = useRoomDetail(id as string);
@@ -16,12 +18,20 @@ const RoomDetail = ({ params: { id } }: SearchParamProps) => {
 
   return (
     <div>
-      {/* room detail */}
-      <pre>{JSON.stringify(room, null, 2)}</pre>
-      {/* restaurant detail */}
-      <pre>{JSON.stringify(restaurant, null, 2)}</pre>
-      {/* restaurant dishes */}
-      <pre>{JSON.stringify(dishes, null, 2)}</pre>
+      <MantineProvider>
+        <Container fluid bg="var(--mantine-color-blue-light)">
+          <Title ta="center" order={1}>{restaurant.name}</Title>
+          <Grid>
+            {dishes?.map(
+              (data) => (
+                <Grid.Col span={3} key={data._id}>
+                  <CardCommon data={data} className={''}/>
+                </Grid.Col>
+              )
+            )}
+          </Grid>
+        </Container>
+      </MantineProvider>
     </div>
   );
 };
