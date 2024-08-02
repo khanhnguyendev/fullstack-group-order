@@ -1,3 +1,5 @@
+import { SocketService } from '@modules/socket/socket.service';
+import { Logger } from '@nestjs/common';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -8,7 +10,11 @@ import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({ cors: true })
 export class OrderGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  @WebSocketServer() server: Server;
+  private logger: Logger = new Logger('RoomGateway');
+
+  @WebSocketServer() wss: Server;
+
+  constructor(private readonly socketService: SocketService) {}
 
   handleConnection(client: Socket, ...args: any[]) {
     console.log(`Client connected:${client.id}`);
@@ -18,7 +24,7 @@ export class OrderGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log(`Client disconnected:${client.id}`);
   }
 
-  notify<T>(event: string, data: T): void {
-    this.server.emit(event, data);
+  notify<T>(event: string, type: string, message: T): void {
+    this.socketService.notify(event, type, message);
   }
 }

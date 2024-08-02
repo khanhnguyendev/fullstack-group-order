@@ -16,7 +16,7 @@ export class SocketService {
       return;
     }
 
-    const roomId = (message as any).roomId; // Adjusted to expect roomId in the message if needed
+    const roomId = type;
     if (!roomId) {
       return this.logger.error(`Cannot send socket message to room ${roomId}`);
     }
