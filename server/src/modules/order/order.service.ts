@@ -42,9 +42,9 @@ export class OrderService {
       await newOrder.save();
       this.logger.log(`Order created with ID: ${newOrder._id}`);
 
-      this.orderGateway.notify(
+      this.orderGateway.notifyToRoom(
         'order-added',
-        orderData.room_id.toString(),
+        orderData.room_id,
         newOrder,
       );
 
