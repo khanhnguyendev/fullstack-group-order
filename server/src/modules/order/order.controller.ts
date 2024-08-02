@@ -7,9 +7,9 @@ import { ResponseUtil, SuccessResponse } from '@common/utils/response.util';
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
-  @Get()
-  async findAll(): Promise<SuccessResponse<Order[]>> {
-    const orders = await this.orderService.getAll();
+  @Get(':room_id')
+  async findAllByRoomId(room_id: string): Promise<SuccessResponse<Order[]>> {
+    const orders = await this.orderService.getAllByRoomId();
     return ResponseUtil.success(orders);
   }
 

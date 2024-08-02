@@ -7,6 +7,7 @@ import { RestaurantModule } from './modules/restaurant/restaurant.module';
 import { DishModule } from './modules/dish/dish.module';
 import { SocketModule } from './modules/socket/socket.module';
 import { LoggingMiddleware } from './common/logging/logging.middleware';
+import { OrderModule } from '@modules/order/order.module';
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ dotenv.config();
     ShopeefoodModule,
     RestaurantModule,
     DishModule,
+    OrderModule,
     SocketModule,
   ],
   controllers: [],

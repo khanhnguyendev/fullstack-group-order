@@ -13,7 +13,7 @@ export class SocketService {
     this.wss.emit(event, message);
   }
 
-  notifyToRoom<T>(event: string, room_id: number, message: T): void {
-    this.wss.to(room_id.toString()).emit(event, message);
+  notifyToRoom<T>(event: string, room_id: string, message: T): void {
+    this.wss.to(room_id).emit(event, message);
   }
 }
