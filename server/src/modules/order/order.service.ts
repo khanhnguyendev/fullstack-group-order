@@ -16,8 +16,13 @@ export class OrderService {
     private orderGateway: OrderGateway,
   ) {}
 
-  async getAll(): Promise<Order[]> {
-    return this.orderModel.find({});
+  async getAllByRoomId(room_id: string): Promise<Order[]> {
+    try {
+      return await this.orderModel.find({ room_id }).exec();
+    } catch (error) {
+      this.logger.error('Failed to get orders by room ID', error.stack);
+      throw error;
+    }
   }
 
   async create(orderData: Order): Promise<Order> {
@@ -38,7 +43,13 @@ export class OrderService {
         // TODO: Check if topping exists
       }
 
-      const newOrder = await this.orderModel.create(orderData);
+      const order: Order = {
+        ...orderData,
+        price: dish.price.value,
+        restaurant_id: dish.restaurant_id,
+      };
+
+      const newOrder = await this.orderModel.create(order);
       await newOrder.save();
       this.logger.log(`Order created with ID: ${newOrder._id}`);
 

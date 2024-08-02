@@ -10,8 +10,6 @@ import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({ cors: true })
 export class OrderGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  private logger: Logger = new Logger('RoomGateway');
-
   @WebSocketServer() wss: Server;
 
   constructor(private readonly socketService: SocketService) {}
@@ -24,7 +22,7 @@ export class OrderGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log(`Client disconnected:${client.id}`);
   }
 
-  notifyToRoom<T>(event: string, room_id: number, message: T): void {
+  notifyToRoom<T>(event: string, room_id: string, message: T): void {
     this.socketService.notifyToRoom(event, room_id, message);
   }
 }

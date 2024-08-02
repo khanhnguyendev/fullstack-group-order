@@ -4,7 +4,7 @@ import { HydratedDocument } from 'mongoose';
 @Schema({ timestamps: true })
 export class Order {
   @Prop({ required: true })
-  room_id: number;
+  room_id: string;
 
   @Prop({ required: true })
   restaurant_id: number;
@@ -13,10 +13,10 @@ export class Order {
   order_by: string;
 
   @Prop({ required: true })
-  dish_id: number;
+  dish_id: string;
 
   @Prop({ required: false })
-  topping_id: number;
+  topping_id: string;
 
   @Prop({ required: true })
   quantity: number;
