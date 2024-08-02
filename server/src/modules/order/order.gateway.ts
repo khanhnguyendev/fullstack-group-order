@@ -24,7 +24,7 @@ export class OrderGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log(`Client disconnected:${client.id}`);
   }
 
-  notify<T>(event: string, type: string, message: T): void {
-    this.socketService.notify(event, type, message);
+  notifyToRoom<T>(event: string, room_id: number, message: T): void {
+    this.socketService.notifyToRoom(event, room_id, message);
   }
 }

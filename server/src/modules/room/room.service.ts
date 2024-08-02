@@ -189,7 +189,7 @@ export class RoomService {
       this.logger.log(`Total added dishes: ${newDishes.length}`);
 
       // Notify all clients about the new room
-      this.roomGateway.notify('room-created', 'toAll', savedRoom);
+      this.roomGateway.notifyToAll('room-created', savedRoom);
 
       const endTime = new Date();
       this.logger.log(

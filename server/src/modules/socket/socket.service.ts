@@ -3,23 +3,17 @@ import { Server } from 'socket.io';
 
 @Injectable()
 export class SocketService {
-  private readonly logger = new Logger(SocketService.name);
   private wss: Server;
 
   setServer(wss: Server) {
     this.wss = wss;
   }
 
-  notify<T>(event: string, type: string, message: T): void {
-    if (type === 'toAll') {
-      this.wss.emit(event, message);
-      return;
-    }
+  notifyToAll<T>(event: string, message: T): void {
+    this.wss.emit(event, message);
+  }
 
-    const roomId = type;
-    if (!roomId) {
-      return this.logger.error(`Cannot send socket message to room ${roomId}`);
-    }
-    this.wss.to(roomId).emit(event, message);
+  notifyToRoom<T>(event: string, room_id: number, message: T): void {
+    this.wss.to(room_id.toString()).emit(event, message);
   }
 }
