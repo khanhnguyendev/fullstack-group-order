@@ -1,3 +1,4 @@
+import { api, endPoint } from "@/constant/api";
 import { useEffect, useState } from "react";
 
 interface IPhoto {
@@ -29,9 +30,6 @@ interface Restaurant {
   updatedAt: string;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-const GET_RESTAURANT_BY_ID_URL = (id: string) => `${API_URL}/restaurant/${id}`;
-
 const useRestaurant = (id: string) => {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
 
@@ -39,14 +37,18 @@ const useRestaurant = (id: string) => {
   useEffect(() => {
     const fetchRestaurantDetail = async () => {
       try {
-        const response = await fetch(GET_RESTAURANT_BY_ID_URL(id));
+        const response = await fetch(`${endPoint.RESTAURANT_DETAIL}/${id}`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data: Restaurant = await response.json();
-        setRestaurant(data);
+        const data = await response.json();
+        const restaurantData: Restaurant = data?.message
+        if (!restaurantData) {
+          throw { message: 'No Restaurant Found.' }
+        }
+        setRestaurant(restaurantData);
       } catch (error) {
         throw error;
       }

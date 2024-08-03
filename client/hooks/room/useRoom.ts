@@ -1,3 +1,4 @@
+import { api, endPoint } from "@/constant/api";
 import { socket } from "@/utils/socket";
 import { useEffect, useState } from "react";
 
@@ -12,17 +13,18 @@ interface Room {
   updatedAt: string;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-const GET_ROOMS_URL = `${API_URL}/room`;
-
 const useRoom = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
   // responseable to fetch intital data through api.
   useEffect(() => {
     const fetchOrders = async () => {
-      const response = await fetch(GET_ROOMS_URL);
-      const data: Room[] = await response.json();
-      setRooms(data);
+      const response = await fetch(endPoint.ROOM);
+      const data = await response.json();
+      const roomData: Room[] = data?.message
+      if (!roomData) {
+        throw { message: 'No Room Found.' }
+      }
+      setRooms(roomData);
     };
 
     fetchOrders();

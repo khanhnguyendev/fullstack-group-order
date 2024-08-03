@@ -1,47 +1,35 @@
-import { ChangeEvent, FormEvent, useState } from "react";
-
-const Initial_data = {
-  name: "",
-  description: "",
-  url: "",
-};
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-const CREATE_ROOM_URL = `${API_URL}/room`;
-
+import { api, endPoint } from "@/constant/api";
+import { IRoom, IRoomDetail } from "@/types";
+import { useRouter } from "next/navigation";
 const useCreateRoom = () => {
-  const [data, setData] = useState(Initial_data);
+  const router = useRouter();
 
-  const onChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = target;
-    setData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
+  const onSubmit = async (data: IRoom) => {
     if (!data.name || !data.url) {
-      alert("Please fill in all fields");
+      return alert("Please fill in all fields");
     }
 
     try {
-      await fetch(CREATE_ROOM_URL, {
+      const response = await fetch(endPoint.ROOM, {
         method: "POST",
         headers: {
           "content-type": "application/json",
         },
         body: JSON.stringify(data),
       });
-
-      setData(Initial_data);
+      const resJson = await response.json();
+      const roomData: IRoomDetail = resJson?.message
+      if (!roomData) {
+        throw { message: 'No Room Detail Found.' }
+      }
+      router.push(`/room/${roomData?._id}`)
     } catch (error) {
       console.error(error);
     }
   };
 
   return {
-    onChange,
-    handleSubmit,
-    data,
+    onSubmit,
   };
 };
 

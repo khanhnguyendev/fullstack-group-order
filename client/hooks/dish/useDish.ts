@@ -1,3 +1,4 @@
+import { api, endPoint } from "@/constant/api";
 import { useEffect, useState } from "react";
 
 interface Dish {
@@ -10,10 +11,6 @@ interface Dish {
   updatedAt: string;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-const GET_RESTAURANT_DISHES_BY_ROOM_ID = (id: string) =>
-  `${API_URL}/dish/${id}`;
-
 const useDish = (id: string) => {
   const [dishes, setDishes] = useState<Dish[] | null>(null);
 
@@ -21,14 +18,18 @@ const useDish = (id: string) => {
   useEffect(() => {
     const fetchDishes = async () => {
       try {
-        const response = await fetch(GET_RESTAURANT_DISHES_BY_ROOM_ID(id));
+        const response = await fetch(`${endPoint.DISH_DETAIL}/${id}`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data: Dish[] = await response.json();
-        setDishes(data);
+        const data = await response.json();
+        const dishData: Dish[] = data?.message
+        if (dishData?.length === 0) {
+          throw { message: 'No dish found.' }
+        }
+        setDishes(dishData);
       } catch (error) {
         throw error;
       }

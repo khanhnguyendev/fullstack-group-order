@@ -6,3 +6,11 @@
 body {
   word-break: break-word;
 }
+
+.checkbox-item .mantine-Checkbox-label {
+  display: flex;
+  justify-content: space-between;
+}
+.checkbox-item .mantine-Checkbox-labelWrapper {
+  width: 100%;
+}

@@ -1,3 +1,4 @@
+import { api, endPoint } from "@/constant/api";
 import { useEffect, useState } from "react";
 
 interface Room {
@@ -11,9 +12,6 @@ interface Room {
   updatedAt: string;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-const GET_ROOM_BY_ID_URL = (id: string) => `${API_URL}/room/${id}`;
-
 const useRoomDetail = (id: string) => {
   const [room, setRoom] = useState<Room | null>(null);
 
@@ -21,14 +19,18 @@ const useRoomDetail = (id: string) => {
   useEffect(() => {
     const fetchRoomDetail = async () => {
       try {
-        const response = await fetch(GET_ROOM_BY_ID_URL(id));
+        const response = await fetch(`${endPoint.ROOM}/${id}`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data: Room = await response.json();
-        setRoom(data);
+        const data = await response.json();
+        const roomDetail: Room = data?.message
+        if (!roomDetail) {
+          throw { message: 'No Room Found.' }
+        }
+        setRoom(roomDetail);
       } catch (error) {
         throw error;
       }

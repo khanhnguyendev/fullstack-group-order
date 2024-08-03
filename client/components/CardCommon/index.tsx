@@ -1,37 +1,31 @@
 'use client'
-import { ChildrenProps, ProductImage } from '@/types';
-import { Card, Image, Text, Badge, Button, Group } from '@mantine/core';
+import { ChildrenProps } from '@/types';
+import { Card, Image, Text } from '@mantine/core';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Carousel } from '@mantine/carousel';
+import { ReactNode } from 'react';
 
 interface Props {
   children?: ChildrenProps,
   data: any,
   className?: string,
-  type?: string
+  type?: string,
+  button?: ReactNode
 }
 export default function CardCommon({
-  data, children, className
+  data, children, className, button
 }: Props) {
-  const router = useRouter()
+
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder className={''}>
       {/* image */}
       <Card.Section>
         {data.photos?.length > 0 &&
-          <Carousel withIndicators>
-            {data.photos?.map((photo: ProductImage, idx: number) => (
-              <Carousel.Slide key={idx}>
-                <Image
-                  src={photo.value}
-                  width={photo.width}
-                  height={photo.height}
-                  alt="dishes"
-                />
-              </Carousel.Slide>
-            ))}
-          </Carousel>
+          <Image
+            src={data.photos[data.photos.length -1].value}
+            width={data.photos[data.photos.length -1].width}
+            height={data.photos[data.photos.length -1].height}
+            alt="dishes"
+          />
         }
         <Text fw={500} ta="center">{data.name}</Text>
       </Card.Section>
@@ -40,12 +34,11 @@ export default function CardCommon({
       </Card.Section>
       {data.price &&
         <Card.Section>
-          <Text fw={500}>{data.price.text}</Text>
+          <Text fw={500} ta={'center'}>{data.price.text}</Text>
         </Card.Section>}
       {data.url && <Link href={data.url} target='_blank'>Shop link</Link>}
-      <Button color="blue" fullWidth mt="md" radius="md" onClick={() => router.push(`room/${data._id}`)}>
-        View Detail
-      </Button>
+      
+      <div>{button}</div>
     </Card>
   );
 }

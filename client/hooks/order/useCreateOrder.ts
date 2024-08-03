@@ -1,3 +1,4 @@
+import { api, endPoint } from "@/constant/api";
 import { ChangeEvent, FormEvent, useState } from "react";
 
 const Initial_data = {
@@ -6,40 +7,25 @@ const Initial_data = {
   price: 0,
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-const CREATE_ORDER_URL = `${API_URL}/order`;
-
 const useCreateOrder = () => {
-  const [data, setData] = useState(Initial_data);
-
-  const onChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = target;
-    setData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-    if (!data.address || !data.customer || !data.price) return;
-
+  const orderItem = async (data: any) => {
+    console.log('🚀  file: useCreateOrder.ts:12  data:', data)
     try {
-      await fetch(CREATE_ORDER_URL, {
+      const result = await fetch(endPoint.ORDER, {
         method: "POST",
         headers: {
           "content-type": "application/json",
         },
         body: JSON.stringify(data),
       });
-
-      setData(Initial_data);
+      console.log('....',result)
     } catch (error) {
       console.error(error);
     }
   };
 
   return {
-    onChange,
-    handleSubmit,
-    data,
+    orderItem,
   };
 };
 
