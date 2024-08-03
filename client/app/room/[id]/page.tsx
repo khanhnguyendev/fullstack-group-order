@@ -14,13 +14,11 @@ import { Text, MantineProvider, Title, Container, SimpleGrid, Drawer, Paper, But
 import { useEffect, useState } from "react";
 import { FiShoppingCart } from "react-icons/fi";
 
-
-const RoomDetail = ({ params: { id } }: SearchParamProps) => {
+const RoomDetail = ({ params: { id }  }: SearchParamProps) => {
   const { room } = useRoomDetail(id as string);
   const { restaurant } = useRestaurant(id as string);
   const { dishes } = useDish(id as string);
   const { orders } = useOrder(id as string);
-  console.log('🚀  file: page.tsx:22  orders:', orders)
   const { orderItem } = useCreateOrder();
   const [opened, setOpen] = useState(false)
   const [carts, setCart] = useState<ICart[]>([])
@@ -39,7 +37,7 @@ const RoomDetail = ({ params: { id } }: SearchParamProps) => {
     const formatItem = {
       room_id: dishDetail?.room_id,
       order_by: 'abc',
-      dish_id: dishDetail?._id,
+      dish_id: dishDetail?.dish_id,
       quantity: options.quantity,
       note: options?.note || ''
     }

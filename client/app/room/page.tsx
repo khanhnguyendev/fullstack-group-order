@@ -1,15 +1,9 @@
-import CardCommon from "@/components/CardCommon";
 import RoomList from "@/components/RoomList";
-import { createTheme, MantineProvider, lighten, useMantineTheme, Text } from '@mantine/core';
-
-const theme = createTheme({
-  fontFamily: 'Montserrat, sans-serif',
-  defaultRadius: 'md',
-});
+import { MantineProvider, Text } from '@mantine/core';
 
 export default async function Room() {
   return (
-    <MantineProvider theme={theme}>
+    <MantineProvider>
       <Text size="lg" ta="center" tt="uppercase">Room history</Text>
       <RoomList />
     </MantineProvider>

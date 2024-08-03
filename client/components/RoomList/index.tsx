@@ -5,7 +5,6 @@ import React from "react";
 import CardCommon from "../CardCommon";
 import classes from './style.module.css'
 import { Grid, Button } from '@mantine/core';
-import useOrder from "@/hooks/order/useOrder";
 import { useRouter } from "next/navigation";
 
 export default function RoomList() {

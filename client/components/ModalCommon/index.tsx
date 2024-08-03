@@ -16,6 +16,9 @@ export default function ModalCommon({ itemDetail, openModal, closeModal, options
     initialValues: {
       quantity: 0,
     },
+    validate: {
+      quantity: (value) => (value === 0 ? 'Select quantity' : null),
+    },
    }
     
   );
