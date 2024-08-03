@@ -173,7 +173,7 @@ export class RoomService {
             week_days: [],
             not_available: [],
           },
-          id: dish.id !== undefined ? dish.id : 0,
+          dish_id: dish.id !== undefined ? dish.id : 0,
           display_order:
             dish.display_order !== undefined ? dish.display_order : 0,
           mms_image: dish.mms_image || '',
