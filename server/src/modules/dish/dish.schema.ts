@@ -98,7 +98,7 @@ export class Dish {
   time: Time;
 
   @Prop({ required: true })
-  id: number;
+  dish_id: number;
 
   @Prop({ required: true })
   display_order: number;

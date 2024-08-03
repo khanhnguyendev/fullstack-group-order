@@ -34,7 +34,7 @@ export class OrderService {
         throw new BadRequestException('Dish ID is required');
       }
 
-      const dish = await this.dishModel.findById(dish_id);
+      const dish = await this.dishModel.findOne({ dish_id }).exec();
       if (!dish) {
         throw new BadRequestException('Dish not found');
       }
@@ -53,13 +53,18 @@ export class OrderService {
       await newOrder.save();
       this.logger.log(`Order created with ID: ${newOrder._id}`);
 
+      const response = {
+        ...newOrder.toJSON(),
+        dish_name: dish.name,
+      };
+
       this.orderGateway.notifyToRoom(
         'order-added',
         orderData.room_id,
-        newOrder,
+        response,
       );
 
-      return newOrder;
+      return response;
     } catch (error) {
       this.logger.error('Failed to create order', error.stack);
       throw error;
