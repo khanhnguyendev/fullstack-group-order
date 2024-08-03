@@ -17,12 +17,15 @@ const useCreateRoom = () => {
         },
         body: JSON.stringify(data),
       });
-      const resJson = await response.json();
-      const roomData: IRoomDetail = resJson?.message
-      if (!roomData) {
-        throw { message: 'No Room Detail Found.' }
+      if (!response.ok) {
+        return alert("Failed to create room");
       }
-      router.push(`/room/${roomData?._id}`)
+      const resJson = await response.json();
+      const roomData: IRoomDetail = resJson?.message;
+      if (!roomData) {
+        throw { message: "No Room Detail Found." };
+      }
+      router.push(`/room/${roomData?._id}`);
     } catch (error) {
       console.error(error);
     }
