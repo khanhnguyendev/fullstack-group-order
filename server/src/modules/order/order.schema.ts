@@ -4,13 +4,28 @@ import { HydratedDocument } from 'mongoose';
 @Schema({ timestamps: true })
 export class Order {
   @Prop({ required: true })
-  customer: string;
+  room_id: string;
+
+  @Prop({ required: true })
+  restaurant_id: number;
+
+  @Prop({ required: true })
+  order_by: string;
+
+  @Prop({ required: true })
+  dish_id: string;
+
+  @Prop({ required: false })
+  topping_id: string;
+
+  @Prop({ required: true })
+  quantity: number;
 
   @Prop({ required: true })
   price: number;
 
-  @Prop({ required: true })
-  address: string;
+  @Prop({ required: false })
+  note: string;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
