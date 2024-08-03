@@ -58,11 +58,13 @@ export class OrderService {
         dish_name: dish.name,
       };
 
-      this.orderGateway.notifyToRoom(
-        'order-added',
-        orderData.room_id,
-        response,
-      );
+      // this.orderGateway.notifyToRoom(
+      //   'order-added',
+      //   orderData.room_id,
+      //   response,
+      // );
+
+      this.orderGateway.notify(`order@${orderData.room_id}`, response);
 
       return response;
     } catch (error) {

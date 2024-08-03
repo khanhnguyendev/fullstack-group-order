@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Connection, Model } from 'mongoose';
 import { Room } from './room.schema';
 import { RoomGateway } from './room.gateway';
 import { Dish } from '../dish/dish.schema';
@@ -13,6 +13,8 @@ export class RoomService {
   private readonly logger = new Logger(RoomService.name);
 
   constructor(
+    @InjectConnection()
+    private readonly connection: Connection,
     @InjectModel(Room.name)
     private readonly roomModel: Model<Room>,
     @InjectModel(Restaurant.name)
@@ -49,6 +51,10 @@ export class RoomService {
   async create(roomData: Room): Promise<Room> {
     const startTime = new Date();
     this.logger.log('Creating new room...');
+
+    // Start a transaction
+    const session = await this.connection.startSession();
+    session.startTransaction();
     try {
       // Step 1: Fetch restaurant info from ShopeeFood
       const restaurantInfo = await this.fetchRestaurantInfo(roomData.url);
@@ -64,7 +70,7 @@ export class RoomService {
         restaurant_id: restaurantInfo.restaurant_id,
         delivery_id: restaurantInfo.delivery_id,
       });
-      const savedRoom = await room.save();
+      const savedRoom = await room.save({ session });
       this.logger.log('New room created:', savedRoom);
 
       // Step 3: Fetch restaurant details from ShopeeFood
@@ -83,7 +89,7 @@ export class RoomService {
         ...restaurantDetails,
         room_id: savedRoom._id,
       });
-      await restaurant.save();
+      await restaurant.save({ session });
       this.logger.log('New restaurant added');
 
       // Step 5: Fetch restaurant dishes from ShopeeFood
@@ -96,10 +102,12 @@ export class RoomService {
 
       // Step 6: Create and save the restaurant dishes
       this.logger.log('Removing old dishes...');
-      await this.dishModel.deleteMany({
-        restaurant_id: restaurantInfo.restaurant_id,
-        delivery_id: restaurantInfo.delivery_id,
-      });
+      await this.dishModel
+        .deleteMany({
+          restaurant_id: restaurantInfo.restaurant_id,
+          delivery_id: restaurantInfo.delivery_id,
+        })
+        .session(session);
       this.logger.log('Creating new dishes...');
       const newDishes = restaurantDishes.flatMap((dishType) =>
         dishType.dishes.map((dish) => ({
@@ -123,7 +131,7 @@ export class RoomService {
             : undefined,
           is_active: dish.is_active !== undefined ? dish.is_active : false,
           total_like: dish.total_like || '0',
-          properties: dish.properties || [],
+          // properties: dish.properties || [],
           photos: dish.photos || [],
           options:
             dish.options.map((option) => ({
@@ -185,21 +193,31 @@ export class RoomService {
           delivery_id: restaurantInfo.delivery_id,
         })),
       );
-      await this.dishModel.insertMany(newDishes);
+      await this.dishModel.insertMany(newDishes, { session });
       this.logger.log(`Total added dishes: ${newDishes.length}`);
-
-      // Notify all clients about the new room
-      this.roomGateway.notifyToAll('room-created', savedRoom);
 
       const endTime = new Date();
       this.logger.log(
         `Room creation completed in ${endTime.getTime() - startTime.getTime()}ms`,
       );
 
+      // Commit the transaction
+      await session.commitTransaction();
+
+      // Notify all clients about the new room
+      this.roomGateway.notifyToAll('room-created', savedRoom);
+
       return savedRoom;
     } catch (error) {
       this.logger.error('Error creating room', error.stack);
+
+      // Rollback the transaction
+      this.logger.error('Rolling back transaction...');
+      await session.abortTransaction();
+
       throw error;
+    } finally {
+      session.endSession();
     }
   }
 

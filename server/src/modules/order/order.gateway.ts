@@ -14,15 +14,15 @@ export class OrderGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(private readonly socketService: SocketService) {}
 
-  handleConnection(client: Socket, ...args: any[]) {
-    console.log(`Client connected:${client.id}`);
-  }
+  handleConnection(client: Socket, ...args: any[]) {}
 
-  handleDisconnect(client: Socket) {
-    console.log(`Client disconnected:${client.id}`);
-  }
+  handleDisconnect(client: Socket) {}
 
   notifyToRoom<T>(event: string, room_id: string, message: T): void {
     this.socketService.notifyToRoom(event, room_id, message);
+  }
+
+  notify<T>(event: string, message: T): void {
+    this.socketService.notifyToAll(event, message);
   }
 }

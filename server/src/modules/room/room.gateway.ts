@@ -29,15 +29,15 @@ export class RoomGateway
   }
 
   handleConnection(client: Socket, ...args: any[]) {
-    this.connectedClients.add(client.id);
-    this.logger.log(`Client connected: ${client.id}`);
-    this.logger.log(`Total connected clients: ${this.connectedClients.size}`);
+    // this.connectedClients.add(client.id);
+    // this.logger.log(`Client connected: ${client.id}`);
+    // this.logger.log(`Total connected clients: ${this.connectedClients.size}`);
   }
 
   handleDisconnect(client: Socket) {
-    this.connectedClients.delete(client.id);
-    this.logger.log(`Client disconnected: ${client.id}`);
-    this.logger.log(`Total connected clients: ${this.connectedClients.size}`);
+    // this.connectedClients.delete(client.id);
+    // this.logger.log(`Client disconnected: ${client.id}`);
+    // this.logger.log(`Total connected clients: ${this.connectedClients.size}`);
   }
 
   @SubscribeMessage('joinRoom')

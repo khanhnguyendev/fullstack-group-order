@@ -1,11 +1,5 @@
 import { api, endPoint } from "@/constant/api";
-import { ChangeEvent, FormEvent, useState } from "react";
-
-const Initial_data = {
-  customer: "",
-  address: "",
-  price: 0,
-};
+import { socket } from "@/utils/socket";
 
 const useCreateOrder = () => {
   const orderItem = async (data: any) => {
@@ -17,6 +11,12 @@ const useCreateOrder = () => {
         },
         body: JSON.stringify(data),
       });
+      if (!result.ok) {
+        return alert("Failed to create order");
+      }
+      const resJson = await result.json();
+      const orderData = resJson?.message;
+      return orderData;
     } catch (error) {
       console.error(error);
     }
