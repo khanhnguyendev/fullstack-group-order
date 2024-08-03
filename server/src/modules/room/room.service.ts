@@ -131,7 +131,7 @@ export class RoomService {
             : undefined,
           is_active: dish.is_active !== undefined ? dish.is_active : false,
           total_like: dish.total_like || '0',
-          properties: dish.properties || [],
+          // properties: dish.properties || [],
           photos: dish.photos || [],
           options:
             dish.options.map((option) => ({
