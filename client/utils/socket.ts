@@ -1,5 +1,5 @@
 import { api } from "@/constant/api";
 import { io } from "socket.io-client";
 export const socket = io(
-  api.url || "http://localhost:3001"
+  api.URL || "http://localhost:3001"
 );

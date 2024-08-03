@@ -3,6 +3,7 @@
 import CardCommon from "@/components/CardCommon";
 import Cart from "@/components/Cart";
 import ModalCommon from "@/components/ModalCommon";
+import withAuth from "@/components/withAuth";
 import useDish from "@/hooks/dish/useDish";
 import useCreateOrder from "@/hooks/order/useCreateOrder";
 import useOrder from "@/hooks/order/useOrder";
@@ -10,7 +11,7 @@ import useRestaurant from "@/hooks/restaurant/useRestaurant";
 import useRoomDetail from "@/hooks/room/useRoomDetail";
 import { ICart, IDishOptionsSelected, SearchParamProps } from "@/types";
 import { Text, MantineProvider, Title, Container, SimpleGrid, Drawer, Paper, Button, Indicator } from "@mantine/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiShoppingCart } from "react-icons/fi";
 
 
@@ -18,18 +19,16 @@ const RoomDetail = ({ params: { id } }: SearchParamProps) => {
   const { room } = useRoomDetail(id as string);
   const { restaurant } = useRestaurant(id as string);
   const { dishes } = useDish(id as string);
+  const { orders } = useOrder(id as string);
+  console.log('🚀  file: page.tsx:22  orders:', orders)
   const { orderItem } = useCreateOrder();
   const [opened, setOpen] = useState(false)
   const [carts, setCart] = useState<ICart[]>([])
   const [dishDetail, setDishDetail] = useState(null)
   const [openModal, setOpenModal] = useState(false)
 
-
   if (!room || !restaurant || !dishes) {
     return <div>Loading...</div>;
-  }
-  const close = () => {
-    setOpen(false)
   }
 
   const handleChooseOptions = (item: any) => {
@@ -59,7 +58,7 @@ const RoomDetail = ({ params: { id } }: SearchParamProps) => {
         if (item.quantity > 1) {
           return { ...item, quantity: item.quantity - 1 };
         }
-        return null; // Mark for removal if quantity is 2 or less
+        return null;
       }
       return item;
     }).filter(item => item !== null); // Remove null items
@@ -68,10 +67,10 @@ const RoomDetail = ({ params: { id } }: SearchParamProps) => {
   }
 
   const getCartSummaryQty = () => {
-    return carts?.reduce((total, cart) => total + cart.quantity, 0)
+    return orders?.reduce((total, cart) => total + cart.quantity, 0)
   }
   const getCartPriceTotal = () => {
-    return carts?.reduce((total, cart) => total + (cart.quantity * cart.price.value), 0)
+    return orders?.reduce((total, cart) => total + (cart.quantity * cart.price), 0)
   }
 
   return (
@@ -88,14 +87,14 @@ const RoomDetail = ({ params: { id } }: SearchParamProps) => {
       <Container fluid bg="var(--mantine-color-blue-light)">
         <Drawer
           opened={opened}
-          onClose={close}
+          onClose={() => setOpen(false)}
           position="right"
           title="Order Detail"
           overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
           className="relative"
         >
           <Cart
-            carts={carts}
+            carts={orders}
             onDeleteItem={deleteItem}
             cartTotalQty={getCartSummaryQty()}
             cartTotalPrice={getCartPriceTotal()}
@@ -125,4 +124,4 @@ const RoomDetail = ({ params: { id } }: SearchParamProps) => {
   );
 };
 
-export default RoomDetail;
+export default withAuth(RoomDetail);

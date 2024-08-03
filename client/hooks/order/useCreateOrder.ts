@@ -9,7 +9,6 @@ const Initial_data = {
 
 const useCreateOrder = () => {
   const orderItem = async (data: any) => {
-    console.log('🚀  file: useCreateOrder.ts:12  data:', data)
     try {
       const result = await fetch(endPoint.ORDER, {
         method: "POST",
@@ -18,7 +17,6 @@ const useCreateOrder = () => {
         },
         body: JSON.stringify(data),
       });
-      console.log('....',result)
     } catch (error) {
       console.error(error);
     }

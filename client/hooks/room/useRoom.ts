@@ -17,7 +17,7 @@ const useRoom = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
   // responseable to fetch intital data through api.
   useEffect(() => {
-    const fetchOrders = async () => {
+    const fetchRooms = async () => {
       const response = await fetch(endPoint.ROOM);
       const data = await response.json();
       const roomData: Room[] = data?.message
@@ -27,7 +27,7 @@ const useRoom = () => {
       setRooms(roomData);
     };
 
-    fetchOrders();
+    fetchRooms();
   }, []);
 
   // Subscribe to real-time updates when a room is created on the server.
