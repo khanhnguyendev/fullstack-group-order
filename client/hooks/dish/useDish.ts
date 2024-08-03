@@ -1,8 +1,9 @@
 import { api, endPoint } from "@/constant/api";
 import { useEffect, useState } from "react";
 
-interface Dish {
+export interface Dish {
   _id: string;
+  dish_id: number;
   name: string;
   description: string;
   price: number;
@@ -25,9 +26,9 @@ const useDish = (id: string) => {
         }
 
         const data = await response.json();
-        const dishData: Dish[] = data?.message
+        const dishData: Dish[] = data?.message;
         if (dishData?.length === 0) {
-          throw { message: 'No dish found.' }
+          throw { message: "No dish found." };
         }
         setDishes(dishData);
       } catch (error) {
