@@ -12,14 +12,14 @@ export interface Dish {
   updatedAt: string;
 }
 
-const useDish = (id: string) => {
+const useDish = (room_id: string) => {
   const [dishes, setDishes] = useState<Dish[] | null>(null);
 
   // Fetch dishes by room ID from API.
   useEffect(() => {
     const fetchDishes = async () => {
       try {
-        const response = await fetch(`${endPoint.DISH_DETAIL}/${id}`);
+        const response = await fetch(`${endPoint.DISH_DETAIL}/${room_id}`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -36,10 +36,10 @@ const useDish = (id: string) => {
       }
     };
 
-    if (id) {
+    if (room_id) {
       fetchDishes();
     }
-  }, [id]);
+  }, [room_id]);
 
   return {
     dishes,

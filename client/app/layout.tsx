@@ -1,8 +1,9 @@
 import "./globals.css";
-import '@mantine/core/styles.css';
+import "@mantine/core/styles.css";
 import { Inter } from "next/font/google";
-import '@mantinex/mantine-logo/styles.css';
-import '@mantine/carousel/styles.css';
+import "@mantinex/mantine-logo/styles.css";
+import "@mantine/carousel/styles.css";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-slate-200 min-h-full min-w-full`}>
+        <Toaster position="bottom-right" />
         {children}
       </body>
     </html>

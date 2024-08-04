@@ -12,23 +12,23 @@ interface Room {
   updatedAt: string;
 }
 
-const useRoomDetail = (id: string) => {
+const useRoomDetail = (room_id: string) => {
   const [room, setRoom] = useState<Room | null>(null);
 
   // Fetch room details by ID from API.
   useEffect(() => {
     const fetchRoomDetail = async () => {
       try {
-        const response = await fetch(`${endPoint.ROOM}/${id}`);
+        const response = await fetch(`${endPoint.ROOM}/${room_id}`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
-        const roomDetail: Room = data?.message
+        const roomDetail: Room = data?.message;
         if (!roomDetail) {
-          throw { message: 'No Room Found.' }
+          throw { message: "No Room Found." };
         }
         setRoom(roomDetail);
       } catch (error) {
@@ -36,10 +36,10 @@ const useRoomDetail = (id: string) => {
       }
     };
 
-    if (id) {
+    if (room_id) {
       fetchRoomDetail();
     }
-  }, [id]);
+  }, [room_id]);
 
   return {
     room,

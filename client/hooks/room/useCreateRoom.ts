@@ -1,6 +1,8 @@
 import { api, endPoint } from "@/constant/api";
 import { IRoom, IRoomDetail } from "@/types";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+
 const useCreateRoom = () => {
   const router = useRouter();
 
@@ -9,26 +11,38 @@ const useCreateRoom = () => {
       return alert("Please fill in all fields");
     }
 
-    try {
+    const createRoomPromise = async () => {
       const response = await fetch(endPoint.ROOM, {
         method: "POST",
         headers: {
-          "content-type": "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
+
       if (!response.ok) {
-        return alert("Failed to create room");
+        throw new Error("Failed to create room");
       }
+
       const resJson = await response.json();
       const roomData: IRoomDetail = resJson?.message;
+
       if (!roomData) {
-        throw { message: "No Room Detail Found." };
+        throw new Error("No Room Detail Found.");
       }
+
       router.push(`/room/${roomData?._id}`);
-    } catch (error) {
-      console.error(error);
-    }
+    };
+
+    toast
+      .promise(createRoomPromise(), {
+        loading: "Creating room...",
+        success: "Room created successfully!",
+        error: "Failed to create room",
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return {
