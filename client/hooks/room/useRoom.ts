@@ -34,7 +34,6 @@ const useRoom = () => {
   useEffect(() => {
     const handleRoomCreated = (newData: Room) => {
       setRooms((prevData) => [...prevData, newData]);
-      alert(`New room created: ${newData._id}`);
     };
 
     socket.on("room-created", handleRoomCreated);

@@ -3,12 +3,12 @@ import { IOrder } from "@/types";
 import { socket } from "@/utils/socket";
 import { useEffect, useState } from "react";
 
-const useOrder = (id: string) => {
+const useOrder = (roomId: string) => {
   const [orders, setOrders] = useState<IOrder[]>([]);
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const response = await fetch(`${endPoint.ORDER}/${id}`);
+      const response = await fetch(`${endPoint.ORDER}/${roomId}`);
       const data = await response.json();
       const orderData: IOrder[] = data?.message;
       if (!orderData) {
@@ -18,20 +18,19 @@ const useOrder = (id: string) => {
     };
 
     fetchOrders();
-  }, [id]);
+  }, [roomId]);
 
   //   subscribes to realtime updates when order is added on server.
   useEffect(() => {
     const handleCreateOrder = (newData: IOrder) => {
       setOrders((prevData) => [...prevData, newData]);
-      alert(`New order added: ${newData._id}`);
     };
 
-    socket.on(`order@${id}`, handleCreateOrder);
+    socket.on(`order@${roomId}`, handleCreateOrder);
     return () => {
-      socket.off(`order@${id}`, handleCreateOrder);
+      socket.off(`order@${roomId}`, handleCreateOrder);
     };
-  }, [id]);
+  }, [roomId]);
 
   return {
     orders,
