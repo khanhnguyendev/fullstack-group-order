@@ -1,9 +1,10 @@
 'use client'
-import { TextInput, MantineProvider, Button, Center } from '@mantine/core';
+import withAuth from '@/components/withAuth';
+import { TextInput, MantineProvider, Button, Container } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useRouter } from 'next/navigation'
 
-export default function Home() {
+function Welcome() {
   const router = useRouter()
   const form = useForm({
     mode: 'uncontrolled',
@@ -21,7 +22,7 @@ export default function Home() {
   }
   return (
     <MantineProvider >
-      <Center maw={600} h={300} mx='auto' bg="var(--mantine-color-gray-light)">
+      <Container>
         <form onSubmit={form.onSubmit(submitForm)}>
           <TextInput
             label="Name"
@@ -29,12 +30,15 @@ export default function Home() {
             key={form.key('name')}
             {...form.getInputProps('name')}
           />
-          <Button type="submit" mt="sm">
+          <Button type="submit" mt="sm" >
             Submit
           </Button>
         </form>
-      </Center>
+      </Container>
 
     </MantineProvider>
   );
 };
+
+
+export default withAuth(Welcome)

@@ -3,6 +3,7 @@
 import CardCommon from "@/components/CardCommon";
 import Cart from "@/components/Cart";
 import ModalCommon from "@/components/ModalCommon";
+import SkeletonList from "@/components/Skeletion/List";
 import withAuth from "@/components/withAuth";
 import useDish, { Dish } from "@/hooks/dish/useDish";
 import useCreateOrder from "@/hooks/order/useCreateOrder";
@@ -36,7 +37,7 @@ const RoomDetail = ({ params: { id } }: SearchParamProps) => {
   const [openModal, setOpenModal] = useState(false);
 
   if (!room || !restaurant || !dishes) {
-    return <div>Loading...</div>;
+    return <SkeletonList />
   }
 
   const handleChooseOptions = (item: any) => {
@@ -46,7 +47,7 @@ const RoomDetail = ({ params: { id } }: SearchParamProps) => {
   const handleOptionsSelected = (options: IDishOptionsSelected) => {
     const formatItem = {
       room_id: dishDetail?.room_id,
-      order_by: 'abc',
+      order_by: localStorage.getItem("user") || 'no name',
       dish_id: dishDetail?.dish_id,
       quantity: options.quantity,
       note: options?.note || "",
@@ -135,7 +136,7 @@ const RoomDetail = ({ params: { id } }: SearchParamProps) => {
                     radius="md"
                     onClick={() => handleChooseOptions(data)}
                   >
-                    Add to cart
+                    Select
                   </Button>
                 }
               />

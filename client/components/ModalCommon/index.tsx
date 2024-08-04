@@ -14,7 +14,7 @@ export default function ModalCommon({ itemDetail, openModal, closeModal, options
   const form = useForm({ 
     mode: 'uncontrolled',
     initialValues: {
-      quantity: 0,
+      quantity: 1,
     },
     validate: {
       quantity: (value) => (value === 0 ? 'Select quantity' : null),
@@ -71,6 +71,7 @@ export default function ModalCommon({ itemDetail, openModal, closeModal, options
           label="Quantity"
           placeholder="Enter quantity ne"
           allowNegative={false}
+          defaultValue={1}
           mt='md'
           key={form.key('quantity')}
           {...form.getInputProps('quantity')}

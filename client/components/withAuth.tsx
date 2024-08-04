@@ -1,25 +1,34 @@
 // components/withAuth.tsx
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+import SkeletonList from './Skeletion/List';
 
 const withAuth = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
   const ComponentWithAuth = (props: P) => {
     const [user, setUser] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
+    const pathName = usePathname();
 
     useEffect(() => {
       const storedUser = localStorage.getItem('user');
       setUser(storedUser);
+      setIsLoading(false);
+    }, []);
 
-      if (!storedUser) {
-        router.push('/welcome');
+    useEffect(() => {
+      if (!isLoading) {
+        if (!user && pathName !== '/welcome') {
+          router.push('/welcome');
+        } else if (user && pathName === '/welcome') {
+          router.push('/');
+        }
       }
-    }, [router]);
+    }, [user, pathName, isLoading, router]);
 
-    if (!user) {
-      return <div>Loading...</div>;
+    if (isLoading) {
+      return <SkeletonList />
     }
-
     return <WrappedComponent {...props} />;
   };
 

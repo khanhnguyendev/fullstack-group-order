@@ -1,6 +1,7 @@
 'use client'
 import useOrder from '@/hooks/order/useOrder';
 import { ChildrenProps, ICart, IOrder } from '@/types';
+import { capitalize, formatPrice } from '@/utils/common';
 import { Button, Card, Image, Text } from '@mantine/core';
 import Link from 'next/link';
 import { ReactNode, useState } from 'react';
@@ -25,13 +26,13 @@ export default function Cart({
   }
   return (
     <>
-      <div className="cart-content h-[calc(100vh-120px)]">
+      <div className="cart-content h-[calc(100vh-150px)]">
         {carts?.length > 0 ? carts?.map(cartItem => (
           <div key={cartItem._id} className="grid grid-cols-[15%,40%,5%,20%,1fr] gap-4 items-center">
-            <Text size="lg" className="order-name" title={cartItem.order_by} lineClamp={1}>Name</Text>
-            <Text size="lg" className="item-name" title={cartItem.order_by} lineClamp={1}>{cartItem.order_by}</Text>
+            <Text size="lg" className="order-name" title={cartItem.order_by} lineClamp={1}>{capitalize(cartItem.order_by)}</Text>
+            <Text size="lg" className="item-name" title={cartItem.dish_name} lineClamp={1}>{cartItem.dish_name}</Text>
             <Text size="md" className="quantity">{cartItem.quantity}</Text>
-            <Text size="md" className="price" lineClamp={1}>{cartItem.price}</Text>
+            <Text size="md" className="price" lineClamp={1}>{formatPrice(cartItem.price)}</Text>
             <FaRegTrashAlt size={'15px'} className="cursor-pointer" title='Delete' onClick={() => deleteItem(cartItem._id)}/>
           </div>
         ))

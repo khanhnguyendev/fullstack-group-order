@@ -1,11 +1,18 @@
+'use client'
 import RoomList from "@/components/RoomList";
-import { MantineProvider, Text } from '@mantine/core';
+import { Container, MantineProvider, Text } from '@mantine/core';
+import { useRouter } from "next/navigation";
+import { IoHome } from "react-icons/io5";
 
-export default async function Room() {
+export default function Room() {
+  const router = useRouter()
   return (
     <MantineProvider>
-      <Text size="lg" ta="center" tt="uppercase">Room history</Text>
-      <RoomList />
+      <Container mt='lg'>
+        <IoHome size='20px' className="cursor-pointer" onClick={() => router.push('/')}/>
+        <Text size="lg" ta="center" tt="uppercase" mb='lg'>Room history</Text>
+        <RoomList />
+      </Container>
     </MantineProvider>
   )
 }
