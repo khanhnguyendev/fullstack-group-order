@@ -2,6 +2,9 @@ import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { Order } from './order.schema';
 import { ResponseUtil, SuccessResponse } from '@common/utils/response.util';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
+import { DeleteOrderDto } from './dto/delete-order.dto';
 
 @Controller('order')
 export class OrderController {
@@ -15,9 +18,21 @@ export class OrderController {
     return ResponseUtil.success(orders);
   }
 
-  @Post()
-  async create(@Body() orderData: Order): Promise<SuccessResponse<Order>> {
-    const order = await this.orderService.create(orderData);
+  @Post('create')
+  async create(@Body() dto: CreateOrderDto): Promise<SuccessResponse<Order>> {
+    const order = await this.orderService.create(dto);
+    return ResponseUtil.success(order);
+  }
+
+  @Post('update')
+  async update(@Body() dto: UpdateOrderDto): Promise<SuccessResponse<Order>> {
+    const order = await this.orderService.update(dto);
+    return ResponseUtil.success(order);
+  }
+
+  @Post('delete')
+  async delete(@Body() dto: DeleteOrderDto): Promise<SuccessResponse<Order>> {
+    const order = await this.orderService.delete(dto);
     return ResponseUtil.success(order);
   }
 }

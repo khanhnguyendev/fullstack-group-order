@@ -1,4 +1,5 @@
 import React from "react";
+import { ISocket } from "./socket";
 
 export type SearchParamProps = {
   params: { id: string };
@@ -49,6 +50,7 @@ export interface IDishOptionsSelected {
 }
 
 export interface IOrder {
+  socket: ISocket;
   _id: string;
   price: number;
   createdAt: string;

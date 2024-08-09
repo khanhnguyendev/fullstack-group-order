@@ -26,7 +26,7 @@ const useOrder = (room_id: string) => {
     const handleCreateOrder = (newData: IOrder) => {
       setOrders((prevData) => [...prevData, newData]);
       // TODO check if the order is not from the same user, then show toast
-      toast.success(`${newData?.order_by} added ${newData.dish_name}`);
+      toast.success(newData.socket.message);
     };
 
     socket.on(`order@${room_id}`, handleCreateOrder);
