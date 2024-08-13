@@ -21,7 +21,19 @@ export class OrderService {
 
   async getAllByRoomId(room_id: string): Promise<Order[]> {
     try {
-      return await this.orderModel.find({ room_id }).exec();
+      const orders = await this.orderModel.find({ room_id }).exec();
+      const dishes = await this.dishModel
+        .find({ _id: { $in: orders.map((o) => o.dish_id) } })
+        .exec();
+      // return list orders with dish name
+      const response = orders.map((order) => {
+        const dish = dishes.find((d) => d._id.equals(order.dish_id));
+        return {
+          ...order.toJSON(),
+          dish_name: dish?.name,
+        };
+      });
+      return response;
     } catch (error) {
       this.logger.error('Failed to get orders by room ID', error.stack);
       throw error;
