@@ -137,6 +137,13 @@ export class OrderService {
         throw new BadRequestException('Order not found');
       }
 
+      const dish = await this.dishModel
+        .findOne({ dish_id: order.dish_id, room_id: order.room_id })
+        .exec();
+      if (!dish) {
+        throw new BadRequestException('Dish not found');
+      }
+
       const deletedOrder = await this.orderModel
         .findOneAndDelete({ _id: dto._id }, { rawResult: true })
         .exec()
@@ -152,7 +159,7 @@ export class OrderService {
           user: order.order_by,
           event: `order@${deletedOrder.room_id}`,
           type: 'delete',
-          message: `${order.order_by} deleted order`,
+          message: `${order.order_by} deleted ${dish.name}`,
         },
       };
 
