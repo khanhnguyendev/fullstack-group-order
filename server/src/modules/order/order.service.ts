@@ -23,11 +23,11 @@ export class OrderService {
     try {
       const orders = await this.orderModel.find({ room_id }).exec();
       const dishes = await this.dishModel
-        .find({ _id: { $in: orders.map((o) => o.dish_id) } })
+        .find({ dish_id: { $in: orders.map((o) => o.dish_id) } })
         .exec();
       // return list orders with dish name
       const response = orders.map((order) => {
-        const dish = dishes.find((d) => d._id.equals(order.dish_id));
+        const dish = dishes.find((d) => d.dish_id == order.dish_id);
         return {
           ...order.toJSON(),
           dish_name: dish?.name,
@@ -164,6 +164,8 @@ export class OrderService {
       };
 
       this.orderGateway.notify(`order@${deletedOrder.room_id}`, response);
+
+      this.logger.log(`Order deleted successfully`);
 
       return response;
     } catch (error) {

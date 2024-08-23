@@ -13,7 +13,7 @@ export class Order {
   order_by: string;
 
   @Prop({ required: true })
-  dish_id: string;
+  dish_id: number;
 
   @Prop({ required: false })
   topping_id: string;
