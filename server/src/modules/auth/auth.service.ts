@@ -7,6 +7,7 @@ import { UserService } from '@modules/user/user.service';
 import { KeyTokenService } from './key-token/key-token.service';
 import { InjectConnection } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
+import { getFields } from '@common/utils/lodash.util';
 
 @Injectable()
 export class AuthService {
@@ -58,12 +59,24 @@ export class AuthService {
         private_key: privateKeyString,
       });
 
+      // Return user and tokens
+      const response = {
+        user: getFields(user, [
+          '_id',
+          'name',
+          'role',
+          'isActivated',
+          'isBlocked',
+          'createdAt',
+        ]),
+        tokens,
+      };
+
       // Commit the transaction
       await session.commitTransaction();
-      this.logger.log(`Successfully signed up with guest: ${user}`);
+      this.logger.log(`Successfully signed up with guest: ${user._id}`);
 
-      // Return user and tokens
-      return { user, tokens };
+      return response;
     } catch (error) {
       this.logger.error('Failed to sign up with guest', error.stack);
 
