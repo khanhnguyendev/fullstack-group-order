@@ -13,6 +13,7 @@ const useOrder = (room_id: string) => {
       const data = await response.json();
       const orderData: IOrder[] = data?.message;
       if (!orderData) {
+        toast.error("No Order Found.");
         throw { message: "No Order Found." };
       }
       setOrders(orderData);
@@ -24,7 +25,20 @@ const useOrder = (room_id: string) => {
   // subscribes to realtime updates when order is added on server.
   useEffect(() => {
     const handleCreateOrder = (newData: IOrder) => {
-      setOrders((prevData) => [...prevData, newData]);
+      const mode = newData.socket.type
+      switch (mode) {
+        case 'create':
+          setOrders((prevData) => [...prevData, newData]);
+          break;
+        case 'delete':
+          setOrders((prevData) => {
+            const finalOrder = prevData.filter(item => item._id !== newData._id)
+            return finalOrder
+          });
+          break;
+        default:
+          break;
+      }
       // TODO check if the order is not from the same user, then show toast
       toast.success(newData.socket.message);
     };

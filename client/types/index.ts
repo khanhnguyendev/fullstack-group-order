@@ -63,3 +63,16 @@ export interface IOrder {
   room_id: string;
   dish_name: string;
 }
+
+export interface Dish {
+  _id: string;
+  dish_id: number;
+  name: string;
+  description: string;
+  price: number;
+  photo: string;
+  createdAt: string;
+  updatedAt: string;
+  dish_type_id: number;
+  dish_type_name: string
+}

@@ -14,3 +14,12 @@ body {
 .checkbox-item .mantine-Checkbox-labelWrapper {
   width: 100%;
 }
+
+.mantine-Tabs-root {
+  position: sticky;
+  top: 100px;
+  z-index: 1;
+}
+.section-wrapper {
+  scroll-margin: 140px;
+}

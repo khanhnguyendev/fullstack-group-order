@@ -1,19 +1,19 @@
 import { endPoint } from "@/constant/api";
 import { toast } from "react-hot-toast";
 
-const useCreateOrder = () => {
-  const orderItem = async (data: any) => {
-    const createOrderPromise = async () => {
-      const result = await fetch(endPoint.CREATE_ORDER, {
+const useDeleteOrder = () => {
+  const deleteOrder = async (orderItemId: string) => {
+    const onDeleteOrder = async () => {
+      const result = await fetch(`${endPoint.DELETE_ORDER}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ _id: orderItemId })
       });
 
       if (!result.ok) {
-        throw new Error("Failed to create order");
+        throw new Error("Failed to delete order");
       }
 
       const resJson = await result.json();
@@ -23,21 +23,20 @@ const useCreateOrder = () => {
     };
 
     try {
-      const orderData = await toast.promise(createOrderPromise(), {
+      await toast.promise(onDeleteOrder(), {
         loading: "Processing your order...",
-        success: "Order created successfully!",
-        error: "Failed to create order",
+        success: "Order delete successfully!",
+        error: "Failed to delete order",
       });
 
-      return orderData;
     } catch (error) {
       console.error(error);
     }
   };
 
   return {
-    orderItem,
+    deleteOrder,
   };
 };
 
-export default useCreateOrder;
+export default useDeleteOrder;

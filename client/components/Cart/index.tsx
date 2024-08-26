@@ -27,8 +27,8 @@ export default function Cart({
   return (
     <>
       <div className="cart-content h-[calc(100vh-150px)]">
-        {carts?.length > 0 ? carts?.map(cartItem => (
-          <div key={cartItem._id} className="grid grid-cols-[15%,40%,5%,20%,1fr] gap-4 items-center">
+        {carts?.length > 0 ? carts?.map((cartItem,cartIdx) => (
+          <div key={`${cartItem._id}${cartIdx}`} className="grid grid-cols-[15%,40%,5%,20%,1fr] gap-4 items-center">
             <Text size="lg" className="order-name" title={cartItem.order_by} lineClamp={1}>{capitalize(cartItem.order_by)}</Text>
             <Text size="lg" className="item-name" title={cartItem.dish_name} lineClamp={1}>{cartItem.dish_name}</Text>
             <Text size="md" className="quantity">{cartItem.quantity}</Text>
@@ -43,7 +43,7 @@ export default function Cart({
       <div className="cart-summary flex justify-between items-center">
         <Text size="md">Total: </Text>
         <Text size="md" className="total-qty">{cartTotalQty}</Text>
-        <Text size="md" className="total-price">{cartTotalPrice}</Text>
+        <Text size="md" className="total-price">{formatPrice(cartTotalPrice)}</Text>
       </div>
       <div className="w-[90%] mx-auto rounded">
         <Button loading={loading} fullWidth>Order</Button>

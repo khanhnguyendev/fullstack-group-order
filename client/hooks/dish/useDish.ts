@@ -1,16 +1,6 @@
 import { api, endPoint } from "@/constant/api";
+import { Dish } from "@/types";
 import { useEffect, useState } from "react";
-
-export interface Dish {
-  _id: string;
-  dish_id: number;
-  name: string;
-  description: string;
-  price: number;
-  photo: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
 const useDish = (room_id: string) => {
   const [dishes, setDishes] = useState<Dish[] | null>(null);
