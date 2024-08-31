@@ -8,11 +8,20 @@ import { DishModule } from './modules/dish/dish.module';
 import { SocketModule } from './modules/socket/socket.module';
 import { LoggingMiddleware } from './common/logging/logging.middleware';
 import { OrderModule } from '@modules/order/order.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
+import { JwtModule } from '@nestjs/jwt';
 
 dotenv.config();
 
 @Module({
   imports: [
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '30d' },
+    }),
+
     MongooseModule.forRoot(process.env.MONGODB_URL),
     RoomModule,
     ShopeefoodModule,
@@ -20,6 +29,8 @@ dotenv.config();
     DishModule,
     OrderModule,
     SocketModule,
+    AuthModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],
