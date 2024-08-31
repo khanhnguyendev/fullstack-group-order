@@ -11,18 +11,35 @@ import { OrderModule } from '@modules/order/order.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import config from './config/config';
 
 dotenv.config();
 
 @Module({
   imports: [
-    JwtModule.register({
+    ConfigModule.forRoot({
+      isGlobal: true,
+      cache: true,
+      load: [config],
+    }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (config) => ({
+        secret: config.get('jwt.secret'),
+        signOptions: { expiresIn: config.get('jwt.expiresIn') },
+      }),
       global: true,
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '30d' },
+      inject: [ConfigService],
+    }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (config) => ({
+        uri: config.get('mongodb.url'),
+      }),
+      inject: [ConfigService],
     }),
 
-    MongooseModule.forRoot(process.env.MONGODB_URL),
     RoomModule,
     ShopeefoodModule,
     RestaurantModule,
