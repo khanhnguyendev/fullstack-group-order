@@ -1,0 +1,2 @@
+# POST to /auth/login
+curl -X POST http://localhost:3001/auth/guest/sign-up -d '{"username": "test"}' -H "Content-Type: application/json"

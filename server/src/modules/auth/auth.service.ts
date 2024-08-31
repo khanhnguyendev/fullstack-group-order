@@ -35,7 +35,10 @@ export class AuthService {
 
     try {
       // Step 1: Create a new guest user
-      const newUser = await this.userService.createGuestUser(dto.name, session);
+      const newUser = await this.userService.createGuestUser(
+        dto.username,
+        session,
+      );
 
       // Step 2: Generate a token
       const access_token = await this.jwtService.signAsync({
