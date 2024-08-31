@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './schema/user.schema';
+import { generateGuestUsername } from '@common/utils/utils';
 
 @Injectable()
 export class UserService {
@@ -26,7 +27,9 @@ export class UserService {
     try {
       this.logger.log(`Creating guest user with name: ${name}`);
       // Step 1: Create a new guest user
+      const username = generateGuestUsername();
       const user = new this.userModel({
+        username,
         name,
         role: 'guest',
         isActivated: true,

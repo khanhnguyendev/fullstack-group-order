@@ -22,12 +22,11 @@ export class AuthService {
 
   /**
    * Sign up with guest
-   *
    * Step 1: Create a new guest user
    * Step 2: Generate a token
    * Step 3: Return the user and token
-   *
-   * @param dto
+   * @param dto - The sign up with guest DTO
+   * @returns The user and token
    */
   async signUpWithGuest(dto: SignUpWithGuestDto): Promise<any> {
     const session = await this.connection.startSession();
@@ -35,16 +34,13 @@ export class AuthService {
 
     try {
       // Step 1: Create a new guest user
-      const newUser = await this.userService.createGuestUser(
-        dto.username,
-        session,
-      );
+      const newUser = await this.userService.createGuestUser(dto.name, session);
 
       // Step 2: Generate a token
-      const access_token = await this.jwtService.signAsync({
-        sub: newUser._id,
-        username: newUser.name,
-      });
+      const access_token = await this.generateAccessToken(
+        newUser._id,
+        newUser.username,
+      );
 
       await session.commitTransaction();
       session.endSession();
@@ -66,5 +62,12 @@ export class AuthService {
       // End the session
       session.endSession();
     }
+  }
+
+  async generateAccessToken(userId: string, username: string): Promise<string> {
+    return await this.jwtService.signAsync({
+      sub: userId,
+      username: username,
+    });
   }
 }
