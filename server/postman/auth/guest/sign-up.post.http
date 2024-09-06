@@ -1,7 +1,0 @@
-@URL_DEV=http://localhost:3001
-
-POST {{URL_DEV}}/guest/sign-up
-Content-type: application/json
-{
-  "name": "khanhnguyen
-}

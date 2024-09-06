@@ -8,10 +8,6 @@ import { DishModule } from './modules/dish/dish.module';
 import { SocketModule } from './modules/socket/socket.module';
 import { LoggingMiddleware } from './common/logging/logging.middleware';
 import { OrderModule } from '@modules/order/order.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { UserService } from './modules/user/user.service';
-import { UserModule } from './modules/user/user.module';
-import { KeyTokenModule } from '@modules/auth/key-token/key-token.module';
 
 dotenv.config();
 
@@ -24,9 +20,6 @@ dotenv.config();
     DishModule,
     OrderModule,
     SocketModule,
-    AuthModule,
-    UserModule,
-    KeyTokenModule,
   ],
   controllers: [],
   providers: [],
