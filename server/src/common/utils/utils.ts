@@ -1,5 +1,6 @@
 /**
  * Generate a random username for a guest user
+ *
  * @param prefix - The prefix for the username
  * @returns A random username
  */
