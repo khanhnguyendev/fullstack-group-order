@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
   Logger,
+  BadRequestException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
@@ -22,8 +23,16 @@ export class HttpExceptionFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const message =
+    let message =
       exception.message || 'An unexpected error occurred. Please try again.';
+
+    // Handle validation errors
+    if (exception instanceof BadRequestException) {
+      const response = exception.getResponse();
+      if (typeof response === 'object' && response.hasOwnProperty('message')) {
+        message = (response as any).message;
+      }
+    }
 
     const errorResponse = {
       statusCode: status,
