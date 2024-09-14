@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { OrderController } from './order.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Order, OrderSchema } from './order.schema';
+import { Order, OrderSchema } from '@schemas/order.schema';
 import { OrderGateway } from './order.gateway';
-import { Dish, DishSchema } from '@modules/dish/dish.schema';
+import { Dish, DishSchema } from '@schemas/dish.schema';
 import { SocketModule } from '@modules/socket/socket.module';
 
 @Module({

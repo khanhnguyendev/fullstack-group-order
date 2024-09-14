@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Order } from './order.schema';
+import { Order } from '@schemas/order.schema';
 import { Model } from 'mongoose';
 import { OrderGateway } from './order.gateway';
 import { BadRequestException } from '@common/exceptions/types/bad-request.exception';
-import { Dish } from '@modules/dish/dish.schema';
+import { Dish } from '@schemas/dish.schema';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { DeleteOrderDto } from './dto/delete-order.dto';

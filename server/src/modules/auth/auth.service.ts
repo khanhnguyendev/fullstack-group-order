@@ -4,7 +4,7 @@ import { Connection, Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '@modules/user/user.service';
 import { SignUpWithGuestDto } from '../user/dto/guest/guest.sign-up.dto';
-import { RefreshToken } from './dto/refresh-token.schema';
+import { RefreshToken } from '@schemas/refresh-token.schema';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -43,7 +43,6 @@ export class AuthService {
       const token = await this.generateUserToken(newUser._id, newUser.username);
 
       await session.commitTransaction();
-      session.endSession();
 
       // Step 3: Return the user and token
       return {

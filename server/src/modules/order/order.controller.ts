@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { Order } from './order.schema';
+import { Order } from '@schemas/order.schema';
 import { ResponseUtil, SuccessResponse } from '@common/utils/response.util';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';

@@ -1,12 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, Model } from 'mongoose';
-import { Room } from './room.schema';
 import { RoomGateway } from './room.gateway';
-import { Dish } from '../dish/dish.schema';
+
 import { NotFoundException } from '@common/exceptions/types/not-found.exception';
-import { Restaurant } from '@modules/restaurant/restaurant.schema';
 import { ShopeeFoodService } from '@modules/shopeefood/shopeefood.service';
+import { Restaurant } from '@schemas/restaurant.schema';
+import { Dish } from '@schemas/dish.schema';
+import { Room } from '@schemas/room.schema';
 
 @Injectable()
 export class RoomService {

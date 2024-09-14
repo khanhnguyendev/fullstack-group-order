@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Res } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
 import { ResponseUtil, SuccessResponse } from '@common/utils/response.util';
-import { Restaurant } from './restaurant.schema';
+import { Restaurant } from '@schemas/restaurant.schema';
 
 @Controller('restaurant')
 export class RestaurantController {
