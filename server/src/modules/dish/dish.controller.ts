@@ -1,7 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { DishService } from './dish.service';
 import { ResponseUtil, SuccessResponse } from '@common/utils/response.util';
-import { Dish } from './dish.schema';
+import { Dish } from '@schemas/dish.schema';
 
 @Controller('dish')
 export class DishController {

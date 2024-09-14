@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ResponseUtil, SuccessResponse } from '@common/utils/response.util';
 import { RoomService } from './room.service';
-import { Room } from './room.schema';
+import { Room } from '@schemas/room.schema';
 
 @Controller('room')
 export class RoomController {

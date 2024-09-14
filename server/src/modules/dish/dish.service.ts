@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Dish } from './dish.schema';
+import { Dish } from '@schemas/dish.schema';
 import { Model } from 'mongoose';
 
 @Injectable()
