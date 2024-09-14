@@ -1,18 +1,18 @@
 import * as dotenv from 'dotenv';
+import config from './config/config';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { RoomModule } from './modules/room/room.module';
-import { ShopeefoodModule } from './modules/shopeefood/shopeefood.module';
-import { RestaurantModule } from './modules/restaurant/restaurant.module';
-import { DishModule } from './modules/dish/dish.module';
-import { SocketModule } from './modules/socket/socket.module';
-import { LoggingMiddleware } from './common/logging/logging.middleware';
-import { OrderModule } from '@modules/order/order.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { UserModule } from './modules/user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import config from './config/config';
+import { RoomModule } from '@modules/room/room.module';
+import { ShopeefoodModule } from '@modules/shopeefood/shopeefood.module';
+import { RestaurantModule } from '@modules/restaurant/restaurant.module';
+import { DishModule } from '@modules/dish/dish.module';
+import { OrderModule } from '@modules/order/order.module';
+import { AuthModule } from '@modules/auth/auth.module';
+import { UserModule } from '@modules/user/user.module';
+import { SocketModule } from '@modules/socket/socket.module';
+import { LoggingMiddleware } from '@common/logging/logging.middleware';
 
 dotenv.config();
 
