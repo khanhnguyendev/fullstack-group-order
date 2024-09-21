@@ -15,16 +15,26 @@ interface Room {
 
 const useRoom = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   // responseable to fetch intital data through api.
   useEffect(() => {
     const fetchRooms = async () => {
-      const response = await fetch(endPoint.ROOM);
-      const data = await response.json();
-      const roomData: Room[] = data?.message
-      if (!roomData) {
-        throw { message: 'No Room Found.' }
+      try {
+        setIsLoading(true);
+        const response = await fetch(endPoint.ROOM);
+        const data = await response.json();
+        const roomData: Room[] = data?.message;
+        if (!roomData) {
+          throw new Error('No Room Found.');
+        }
+        setRooms(roomData);
+      } catch (error) {
+        console.error('Error fetching rooms:', error);
+        // Optionally, you can set an error state here
+      } finally {
+        setIsLoading(false);
       }
-      setRooms(roomData);
     };
 
     fetchRooms();
@@ -46,6 +56,7 @@ const useRoom = () => {
 
   return {
     rooms,
+    isLoading
   };
 };
 

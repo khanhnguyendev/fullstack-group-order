@@ -23,3 +23,10 @@ body {
 .section-wrapper {
   scroll-margin: 140px;
 }
+
+.section-wrapper {
+  margin-top: 0;
+}
+.section-wrapper ~ .section-wrapper {
+  margin-top: 50px;
+}

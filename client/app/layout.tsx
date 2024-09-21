@@ -1,4 +1,4 @@
-import "./globals.css";
+import '../styles/globals.scss'
 import "@mantine/core/styles.css";
 import { Inter } from "next/font/google";
 import "@mantinex/mantine-logo/styles.css";

@@ -6,10 +6,17 @@ import CardCommon from "../CardCommon";
 import classes from './style.module.css'
 import { Grid, Button } from '@mantine/core';
 import { useRouter } from "next/navigation";
+import Loading from "../Loading";
 
 export default function RoomList() {
-  const { rooms } = useRoom();
+  const { rooms, isLoading } = useRoom();
   const router = useRouter()
+  
+  if (isLoading) {
+    return (
+      <Loading />
+    );
+  }
   return (
     <Grid>
       {rooms?.map(

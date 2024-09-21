@@ -9,5 +9,6 @@ export const endPoint = {
   UPDATE_ORDER: `${api.URL}/order/update`,
   DELETE_ORDER: `${api.URL}/order/delete`,
   RESTAURANT_DETAIL: `${api.URL}/restaurant`,
-  ROOM: `${api.URL}/room`
+  ROOM: `${api.URL}/room`,
+  SIGN_UP: `${api.URL}/auth/guest/sign-up`
 }

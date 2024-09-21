@@ -15,7 +15,7 @@ export default function Home() {
     <MantineProvider theme={theme}>
       <h1 className="font-bold text-2xl text-center mt-3">Home</h1>
       <Container size="lg" className='flex gap-5'>
-        <Button variant="default" rightSection={<FaListAlt  size={20} />} onClick={() => router.push('/room')}>Rooms</Button>
+        <Button variant="default" rightSection={<FaListAlt size={20} />} onClick={() => router.push('/room')}>Rooms</Button>
         <Button variant="default" rightSection={<FaPlusCircle size={20} />} onClick={() => router.push('/room/create')}>Add new</Button>
       </Container>
 

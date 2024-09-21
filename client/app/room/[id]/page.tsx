@@ -2,9 +2,9 @@
 
 import CardCommon from "@/components/CardCommon";
 import Cart from "@/components/Cart";
+import Loading from "@/components/Loading";
 import ModalCommon from "@/components/ModalCommon";
 import SkeletonList from "@/components/Skeletion/List";
-import withAuth from "@/components/withAuth";
 import useDish from "@/hooks/dish/useDish";
 import useCreateOrder from "@/hooks/order/useCreateOrder";
 import useDeleteOrder from "@/hooks/order/useDeleteOrder";
@@ -24,7 +24,7 @@ import {
   Indicator,
   Tabs,
 } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { FiShoppingCart } from "react-icons/fi";
 
 const RoomDetail = ({ params: { id } }: SearchParamProps) => {
@@ -91,7 +91,7 @@ const RoomDetail = ({ params: { id } }: SearchParamProps) => {
 
   const chooseTab = (tabValue: string) => {
     const section = document.getElementById(tabValue)
-    if(section) {
+    if (section) {
       section.scrollIntoView({ behavior: 'smooth' })
     }
     setActiveTab(tabValue)
@@ -109,88 +109,98 @@ const RoomDetail = ({ params: { id } }: SearchParamProps) => {
     return groupedDishByDishid
   }
 
+  const getDishCategoryById = (id: string) => {
+    const _id = parseInt(id);
+    const listCategories = getDishType();
+    return listCategories.find(cat => cat.value === _id)?.label ?? '';
+  }
+
   const displayDishes = () => {
-    return Object.entries(getDishesInGroup()).map(([key, dishes]) => (
+    const groupedDishes = getDishesInGroup();
+    return Object.entries(groupedDishes).map(([key, dishes]) => (
       <div id={key} key={key} className="section-wrapper">
-        <p>Group {key}</p>
+        <Text fw={700} size="xl">{getDishCategoryById(key)}</Text>
 
         <SimpleGrid cols={4}>
-          {dishes?.map((dish: Dish) => (
-            <div key={dish._id}>
-              <CardCommon
-                data={dish}
-                className={""}
-                button={
-                  <Button
-                    color="blue"
-                    fullWidth
-                    mt="md"
-                    radius="md"
-                    onClick={() => handleChooseOptions(dish)}
-                  >
-                    Select
-                  </Button>
-                }
-              />
-            </div>
+          {Array.isArray(dishes) && dishes.map((dish: Dish) => (
+            <CardCommon
+              key={dish._id}
+              data={dish}
+              button={
+                <Button
+                  color="blue"
+                  fullWidth
+                  mt="md"
+                  radius="md"
+                  onClick={() => handleChooseOptions(dish)}
+                >
+                  Select
+                </Button>
+              }
+            />
           ))}
         </SimpleGrid>
       </div>
-    ))
-  }
+    ));
+  };
   return (
-    <MantineProvider>
-      <div className="relative w-full h-[100px] sticky top-0 z-10 bg-[var(--mantine-color-blue-light)] opacity-100">
-        <Title
-          ta="center"
-          className="flex justify-center items-center h-full"
-          order={1}
+    <Suspense fallback={<Loading />}>
+      <MantineProvider>
+        <div className="relative w-full h-[100px] sticky top-0 z-10 bg-[var(--mantine-color-blue-light)] opacity-100">
+          <Title
+            ta="center"
+            className="flex justify-center items-center h-full"
+            order={1}
+          >
+            {restaurant.name}
+          </Title>
+          <Indicator
+            inline
+            label={getCartSummaryQty()}
+            size={16}
+            className="!absolute right-10 top-[50%] translate-y-[-50%] cursor-pointer"
+          >
+            <FiShoppingCart size={"30px"} onClick={() => setOpen(true)} />
+          </Indicator>
+        </div>
+        <Drawer
+          opened={opened}
+          onClose={() => setOpen(false)}
+          position="right"
+          title="Order Detail"
+          overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
+          className="relative"
         >
-          {restaurant.name}
-        </Title>
-        <Indicator
-          inline
-          label={getCartSummaryQty()}
-          size={16}
-          className="!absolute right-10 top-[50%] translate-y-[-50%] cursor-pointer"
-        >
-          <FiShoppingCart size={"30px"} onClick={() => setOpen(true)} />
-        </Indicator>
-      </div>
-      <Drawer
-        opened={opened}
-        onClose={() => setOpen(false)}
-        position="right"
-        title="Order Detail"
-        overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
-        className="relative"
-      >
-        <Cart
-          carts={orders}
-          onDeleteItem={deleteItem}
-          cartTotalQty={getCartSummaryQty()}
-          cartTotalPrice={getCartPriceTotal()}
-        />
-      </Drawer>
-      <Container size="lg" bg="var(--mantine-color-blue-light)">
-        <Tabs value={activeTab} onChange={(value) => chooseTab(value)}>
-          <Tabs.List>
-            {getDishType()?.map((dish, dishInx) => (
-              <Tabs.Tab key={`${dish.value}-${dishInx}`} value={dish.value.toString()}>{dish.label}</Tabs.Tab>
-            ))}
-          </Tabs.List>
-        </Tabs>
-        {displayDishes()}
+          <Cart
+            carts={orders}
+            onDeleteItem={deleteItem}
+            cartTotalQty={getCartSummaryQty()}
+            cartTotalPrice={getCartPriceTotal()}
+          />
+        </Drawer>
+        <Container size="lg">
+          {getDishType().length > 0 &&
+            <Tabs value={activeTab} onChange={(value) => chooseTab(value ?? '')} bg="var(--mantine-color-blue-light)">
+              <Tabs.List justify="center">
+                {getDishType()?.map((dish, dishInx) => (
+                  <Tabs.Tab key={`${dish.value}-${dishInx}`} value={dish.value.toString()}>{dish.label}</Tabs.Tab>
+                ))}
+              </Tabs.List>
+            </Tabs>
+          }
 
-      </Container>
-      <ModalCommon
-        itemDetail={dishDetail}
-        openModal={openModal}
-        closeModal={(value: boolean) => setOpenModal(value)}
-        optionsSelected={handleOptionsSelected}
-      />
-    </MantineProvider>
+          {displayDishes()}
+
+        </Container>
+        <ModalCommon
+          itemDetail={dishDetail}
+          openModal={openModal}
+          closeModal={(value: boolean) => setOpenModal(value)}
+          optionsSelected={handleOptionsSelected}
+        />
+      </MantineProvider>
+    </Suspense>
   );
 };
 
-export default withAuth(RoomDetail);
+export default RoomDetail;
