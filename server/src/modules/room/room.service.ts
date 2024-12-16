@@ -8,6 +8,7 @@ import { ShopeeFoodService } from '@modules/shopeefood/shopeefood.service';
 import { Restaurant } from '@schemas/restaurant.schema';
 import { Dish } from '@schemas/dish.schema';
 import { Room } from '@schemas/room.schema';
+import { CreateRoomDto } from './dto/create-room.dto';
 
 @Injectable()
 export class RoomService {
@@ -49,7 +50,7 @@ export class RoomService {
     }
   }
 
-  async create(roomData: Room): Promise<Room> {
+  async create(roomData: CreateRoomDto): Promise<Room> {
     const startTime = new Date();
     this.logger.log('Creating new room...');
 
