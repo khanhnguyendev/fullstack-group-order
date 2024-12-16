@@ -52,7 +52,9 @@ export class UserService {
         isBlocked: false,
       });
       const newUser = await user.save({ session });
-      this.logger.log(`Successfully created guest user with name: ${name}`);
+      this.logger.log(
+        `Successfully created guest user with name: ${name}, user_id: ${newUser._id}  `,
+      );
 
       // Step 5: Return the new user
       return newUser;
@@ -64,5 +66,9 @@ export class UserService {
 
   async findById(user_id: string): Promise<User> {
     return this.userModel.findById(user_id).exec();
+  }
+
+  async findByUsername(username: string): Promise<User> {
+    return this.userModel.findOne({ username }).exec();
   }
 }

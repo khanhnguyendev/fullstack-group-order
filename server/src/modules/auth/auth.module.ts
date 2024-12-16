@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
+import { PassportModule } from '@nestjs/passport';
+import { MongooseModule } from '@nestjs/mongoose';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { User, UserSchema } from '@schemas/user.schema';
-import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from '@modules/user/user.module';
+import { User, UserSchema } from '@schemas/user.schema';
 import {
   RefreshToken,
   RefreshTokenSchema,
@@ -13,11 +14,12 @@ import {
   controllers: [AuthController],
   providers: [AuthService],
   imports: [
+    UserModule,
+    PassportModule,
     MongooseModule.forFeature([
       { schema: UserSchema, name: User.name },
       { schema: RefreshTokenSchema, name: RefreshToken.name },
     ]),
-    UserModule,
   ],
 })
 export class AuthModule {}
