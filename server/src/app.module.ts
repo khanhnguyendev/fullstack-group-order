@@ -15,6 +15,8 @@ import { SocketModule } from '@modules/socket/socket.module';
 import { LoggingMiddleware } from '@common/logging/logging.middleware';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from '@modules/auth/jwt-auth.guard';
 
 dotenv.config();
 
@@ -61,7 +63,11 @@ dotenv.config();
   providers: [
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard,
+      useClass: JwtAuthGuard, // JWT guard for all routes
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard, // Rate limiting
     },
   ],
 })
