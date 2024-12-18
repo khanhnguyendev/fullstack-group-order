@@ -3,7 +3,7 @@ import { DishService } from './dish.service';
 import { ResponseUtil, SuccessResponse } from '@common/utils/response.util';
 import { Dish } from '@schemas/dish.schema';
 
-@Controller('dish')
+@Controller({ path: 'dish', version: '1' })
 export class DishController {
   constructor(private readonly dishService: DishService) {}
 

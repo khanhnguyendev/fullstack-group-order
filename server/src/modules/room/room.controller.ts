@@ -4,7 +4,7 @@ import { RoomService } from './room.service';
 import { Room } from '@schemas/room.schema';
 import { CreateRoomDto } from './dto/create-room.dto';
 
-@Controller('room')
+@Controller({ path: 'room', version: '1' })
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 

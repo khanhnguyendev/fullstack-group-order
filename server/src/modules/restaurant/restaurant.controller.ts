@@ -3,7 +3,7 @@ import { RestaurantService } from './restaurant.service';
 import { ResponseUtil, SuccessResponse } from '@common/utils/response.util';
 import { Restaurant } from '@schemas/restaurant.schema';
 
-@Controller('restaurant')
+@Controller({ path: 'restaurant', version: '1' })
 export class RestaurantController {
   constructor(private readonly restaurantService: RestaurantService) {}
 

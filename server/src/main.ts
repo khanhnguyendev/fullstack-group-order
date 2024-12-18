@@ -2,12 +2,22 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 import { HttpExceptionFilter } from '@common/exceptions/filters/http-exception.filter';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Set global route prefix (e.g., all routes will start with /api)
+  app.setGlobalPrefix('api'); // All routes will be prefixed with `/api`
+
+  // Enable versioning (e.g., /api/v1/...)
+  app.enableVersioning({
+    type: VersioningType.URI,
+    prefix: 'v', // The prefix for versioning (e.g., /v1, /v2)
+  });
 
   const allowedOrigins = process.env.ALLOWED_ORIGINS
     ? process.env.ALLOWED_ORIGINS.split(',').map((origin) => origin.trim())
@@ -33,6 +43,14 @@ async function bootstrap() {
   );
 
   app.useGlobalFilters(new HttpExceptionFilter());
+
+  const config = new DocumentBuilder()
+    .setTitle('GroupOrderShopeeFood API')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('swagger', app, document);
 
   await app.listen(3001);
 }

@@ -6,7 +6,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { DeleteOrderDto } from './dto/delete-order.dto';
 
-@Controller('order')
+@Controller({ path: 'order', version: '1' })
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
