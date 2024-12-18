@@ -1,28 +1,29 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { ResponseUtil, SuccessResponse } from '@common/utils/response.util';
+import { ResponseUtil } from '@common/utils/response.util';
 import { RoomService } from './room.service';
-import { Room } from '@schemas/room.schema';
 import { CreateRoomDto } from './dto/create-room.dto';
+import { CurrentUser } from '@common/decorators/current-user.decorator';
+import { UserPayload } from '@common/interfaces/user-payload.interface';
 
 @Controller({ path: 'room', version: '1' })
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 
   @Get()
-  async getAllRooms(): Promise<SuccessResponse<Room[]>> {
+  async getAllRooms() {
     const rooms = await this.roomService.getAllRooms();
     return ResponseUtil.success(rooms);
   }
 
   @Get(':id')
-  async getRoomById(@Param('id') id: string): Promise<SuccessResponse<Room>> {
+  async getRoomById(@Param('id') id: string) {
     const room = await this.roomService.getRoomById(id);
     return ResponseUtil.success(room);
   }
 
   @Post()
-  async create(@Body() data: CreateRoomDto): Promise<SuccessResponse<Room>> {
-    const newRoom = await this.roomService.create(data);
+  async create(@CurrentUser() user: UserPayload, @Body() data: CreateRoomDto) {
+    const newRoom = await this.roomService.create(user, data);
     return ResponseUtil.success(newRoom);
   }
 }

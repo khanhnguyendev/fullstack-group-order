@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, Model } from 'mongoose';
 import { RoomGateway } from './room.gateway';
-
+import { UserPayload } from '@common/interfaces/user-payload.interface';
 import { NotFoundException } from '@common/exceptions/types/not-found.exception';
 import { ShopeeFoodService } from '@modules/shopeefood/shopeefood.service';
 import { Restaurant } from '@schemas/restaurant.schema';
@@ -50,7 +50,7 @@ export class RoomService {
     }
   }
 
-  async create(roomData: CreateRoomDto): Promise<Room> {
+  async create(user: UserPayload, roomData: CreateRoomDto): Promise<Room> {
     const startTime = new Date();
     this.logger.log('Creating new room...');
 
