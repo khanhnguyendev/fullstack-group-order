@@ -8,6 +8,8 @@ import { ShopeefoodModule } from 'src/modules/shopeefood/shopeefood.module';
 import { Restaurant, RestaurantSchema } from '@schemas/restaurant.schema';
 import { Dish, DishSchema } from '@schemas/dish.schema';
 import { SocketModule } from '../socket/socket.module';
+import { UserService } from '@modules/user/user.service';
+import { User, UserSchema } from '@common/schemas/user.schema';
 
 @Module({
   imports: [
@@ -15,11 +17,12 @@ import { SocketModule } from '../socket/socket.module';
       { schema: RoomSchema, name: Room.name },
       { schema: RestaurantSchema, name: Restaurant.name },
       { schema: DishSchema, name: Dish.name },
+      { schema: UserSchema, name: User.name },
     ]),
     SocketModule,
     ShopeefoodModule,
   ],
   controllers: [RoomController],
-  providers: [RoomService, RoomGateway],
+  providers: [RoomGateway, RoomService, UserService],
 })
 export class RoomModule {}

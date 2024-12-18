@@ -31,6 +31,7 @@ async function bootstrap() {
         callback(new Error('Not allowed by CORS'));
       }
     },
+    allowedHeaders: ['Content-Type', 'Authorization'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
@@ -47,7 +48,10 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('GroupOrderShopeeFood API')
     .setVersion('1.0')
-    .addBearerAuth()
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'access-token',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);

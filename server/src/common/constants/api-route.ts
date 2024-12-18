@@ -4,4 +4,9 @@ export const API_ROUTES = {
       SIGN_UP: 'guest/sign-up',
     },
   },
+  ROOM: {
+    CREATE: 'create',
+    GET_BY_ID: ':id',
+    ALL: 'all',
+  },
 };

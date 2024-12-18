@@ -17,6 +17,9 @@ export class Room {
 
   @Prop({ required: true })
   url: string;
+
+  @Prop({ required: true })
+  created_by: string;
 }
 
 export const RoomSchema = SchemaFactory.createForClass(Room);

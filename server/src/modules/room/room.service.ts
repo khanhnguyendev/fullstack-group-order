@@ -9,6 +9,7 @@ import { Restaurant } from '@schemas/restaurant.schema';
 import { Dish } from '@schemas/dish.schema';
 import { Room } from '@schemas/room.schema';
 import { CreateRoomDto } from './dto/create-room.dto';
+import { UserService } from '@modules/user/user.service';
 
 @Injectable()
 export class RoomService {
@@ -25,7 +26,9 @@ export class RoomService {
     private readonly dishModel: Model<Dish>,
 
     private readonly roomGateway: RoomGateway,
+
     private readonly shopeefoodService: ShopeeFoodService,
+    private readonly userService: UserService,
   ) {}
 
   async getAllRooms(): Promise<Room[]> {
@@ -50,19 +53,26 @@ export class RoomService {
     }
   }
 
-  async create(user: UserPayload, roomData: CreateRoomDto): Promise<Room> {
+  async create(token: UserPayload, roomData: CreateRoomDto): Promise<Room> {
     const startTime = new Date();
-    this.logger.log('Creating new room...');
 
     // Start a transaction
     const session = await this.connection.startSession();
     session.startTransaction();
+
     try {
+      // Check if the user exists in the database
+      const user = await this.userService.checkUserExists({
+        userId: token.userId,
+      });
+
+      this.logger.log(`Create new room by user ${user.username}`);
+
       // Step 1: Fetch restaurant info from ShopeeFood
       const restaurantInfo = await this.fetchRestaurantInfo(roomData.url);
       if (!restaurantInfo) {
         throw new NotFoundException(
-          'Restaurant information could not be retrieved',
+          '[ShopeeFoodService] Restaurant information could not be retrieved',
         );
       }
 
@@ -71,6 +81,7 @@ export class RoomService {
         ...roomData,
         restaurant_id: restaurantInfo.restaurant_id,
         delivery_id: restaurantInfo.delivery_id,
+        created_by: user._id,
       });
       const savedRoom = await room.save({ session });
       this.logger.log('New room created:', savedRoom);
@@ -81,7 +92,7 @@ export class RoomService {
       );
       if (!restaurantDetails) {
         throw new NotFoundException(
-          'Restaurant details could not be retrieved',
+          '[ShopeeFoodService] Restaurant details could not be retrieved',
         );
       }
 
@@ -99,7 +110,9 @@ export class RoomService {
         restaurantInfo.delivery_id,
       );
       if (!restaurantDishes) {
-        throw new NotFoundException('Restaurant dishes could not be retrieved');
+        throw new NotFoundException(
+          '[ShopeeFoodService] Restaurant dishes could not be retrieved',
+        );
       }
 
       // Step 6: Create and save the restaurant dishes

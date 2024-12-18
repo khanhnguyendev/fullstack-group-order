@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '@schemas/user.schema';
 import { generateGuestUsername } from '@common/utils/utils';
+import { NotFoundException } from '@common/exceptions/types/not-found.exception';
 
 @Injectable()
 export class UserService {
@@ -70,5 +71,23 @@ export class UserService {
 
   async findByUsername(username: string): Promise<User> {
     return this.userModel.findOne({ username }).exec();
+  }
+
+  /**
+   * Check if a user exists by ID or email.
+   * @param criteria - Object containing `userId`, `email`, or other identifiers.
+   * @throws NotFoundException if the user is not found.
+   */
+  async checkUserExists(criteria: {
+    userId?: string;
+    email?: string;
+  }): Promise<User> {
+    const user = await this.userModel.findById(criteria.userId).exec();
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
   }
 }
